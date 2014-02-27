@@ -1,5 +1,4 @@
 import wx
-from pyo import *
 from wx.lib.mixins.inspection import InspectionMixin
 from Resources.mymapper import MyMapper
 from Resources.panels import *
@@ -90,7 +89,7 @@ class MyFrame(wx.Frame):
         expr_tool = self.toolbar.AddCheckLabelTool(wx.ID_ANY, "Checkable", expr_ico, shortHelp="Expression")
 
         # expression for mapping
-        self.expression_y = wx.StaticText(self.toolbar, -1, " y = ")
+        self.expression_y = wx.StaticText(self.toolbar, -1, " Expr ")
         self.expression_input = wx.TextCtrl(self.toolbar, -1, "", size=(220, 26))
         self.toolbar.AddControl(self.expression_y)
         self.toolbar.AddControl(self.expression_input)
@@ -225,6 +224,12 @@ class MyFrame(wx.Frame):
 
         self.Show()
 
+    def RefreshAll(self):
+        self.sources_panel.RefreshAll()
+        self.destinations_panel.RefreshAll()
+        self.sources_panel.ExpandAll() #TODO: do not repeat code
+        self.destinations_panel.ExpandAll()
+
     def redraw(self):
         wx.CallAfter(self.connections_panel.Refresh)
 
@@ -255,12 +260,6 @@ class MyFrame(wx.Frame):
     def OnDisconnectAll(self, event): #TODO: unlink if last connection
         pass
 
-    def RefreshAll(self):
-        self.sources_panel.RefreshAll()
-        self.destinations_panel.RefreshAll()
-        self.sources_panel.ExpandAll() #TODO: do not repeat code
-        self.destinations_panel.ExpandAll()
-
     def OnRefresh(self, event):
         self.RefreshAll()
 
@@ -274,9 +273,6 @@ class MyFrame(wx.Frame):
 
     def OnQuit(self, event):
         self.Close(True)
-
-
-
 
 class TestApp(wx.App, InspectionMixin):
    def OnInit(self):

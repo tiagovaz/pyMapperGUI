@@ -19,6 +19,10 @@ class MyMapper:
         elif action == "disconnect":
             self.mon.disconnect(source, dest)
 
+    def getConnectionBySignalFullNames(self, src, dest):
+        self.mon.poll(50)
+        return self.mon.db.get_connection_by_signal_full_names(src, dest)
+
     def getConnections(self):
         self.mon.poll(50)
         self.connections = [ i for i in self.mon.db.all_connections() ]

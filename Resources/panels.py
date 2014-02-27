@@ -1,6 +1,5 @@
 import wx
 import wx.gizmos
-from pyo import *
 import mymapper
 import math
 
@@ -67,6 +66,7 @@ class MyTreeList(wx.Panel):
         self.tree.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OnActivate, self.tree)
         self.tree.Bind(wx.EVT_TREE_ITEM_EXPANDED, self.changed, self.tree)
         self.tree.Bind(wx.EVT_TREE_ITEM_COLLAPSED, self.changed, self.tree)
+        self.tree.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnItemChanged, self.tree)
         self.Bind(wx.EVT_SIZE, self.OnSize)
 
         ### expand all
@@ -97,6 +97,17 @@ class MyTreeList(wx.Panel):
 
         # Expand the first level by default
         self.tree.ExpandAll(self.root)
+
+
+    def OnItemChanged(self, evt):
+        # show the connection expression in the toolbar
+        src = self.GetParent().GetParent().sources_panel.GetSignalAddress()
+        dest = self.GetParent().GetParent().destinations_panel.GetSignalAddress()
+        connection_data = self.my_mapper.getConnectionBySignalFullNames(src, dest)
+        if connection_data == None:
+            self.GetParent().GetParent().expression_input.Clear()
+        else:
+            self.GetParent().GetParent().expression_input.SetValue(connection_data["expression"])
 
     def changed(self, evt):
         self.GetParent().GetParent().redraw()
