@@ -258,7 +258,9 @@ class MyFrame(wx.Frame):
         self.connections_panel.DrawConnectionsLines()
 
     def OnDisconnectAll(self, event): #TODO: unlink if last connection
-        pass
+        for c in self.my_mapper.getConnections():
+            self.my_mapper.setConnection(c["src_name"], c["dest_name"], action="disconnect", options={}) #TODO: unlink ?
+        self.connections_panel.DrawConnectionsLines()
 
     def OnRefresh(self, event):
         self.RefreshAll()

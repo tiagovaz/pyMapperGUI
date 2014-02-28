@@ -108,6 +108,7 @@ class MyTreeList(wx.Panel):
             self.GetParent().GetParent().expression_input.Clear()
         else:
             self.GetParent().GetParent().expression_input.SetValue(connection_data["expression"])
+        print connection_data
 
     def changed(self, evt):
         self.GetParent().GetParent().redraw()
@@ -126,8 +127,8 @@ class MyTreeList(wx.Panel):
 
     def NewConnection(self):
         # set link and connection with libmapper
-        self.GetParent().GetParent().my_mapper.setLink("/"+self.GetParent().GetParent().sources_panel.GetSignalAddress().split("/")[1], "/"+self.GetParent().GetParent().destinations_panel.GetSignalAddress().split("/")[1], {})
-        self.GetParent().GetParent().my_mapper.setConnection(self.GetParent().GetParent().sources_panel.GetSignalAddress(), self.GetParent().GetParent().destinations_panel.GetSignalAddress(), action="connect", options={})
+        self.my_mapper.setLink("/"+self.GetParent().GetParent().sources_panel.GetSignalAddress().split("/")[1], "/"+self.GetParent().GetParent().destinations_panel.GetSignalAddress().split("/")[1], {})
+        self.my_mapper.setConnection(self.GetParent().GetParent().sources_panel.GetSignalAddress(), self.GetParent().GetParent().destinations_panel.GetSignalAddress(), action="connect", options={})
 
     def OnSize(self, evt):
         self.tree.SetSize(self.GetSize())
