@@ -108,7 +108,20 @@ class MyTreeList(wx.Panel):
             self.GetParent().GetParent().expression_input.Clear()
         else:
             self.GetParent().GetParent().expression_input.SetValue(connection_data["expression"])
-        print connection_data
+
+        src_signal = self.my_mapper.getSignalObjectBySignalFullName(src, "output")
+        dest_signal = self.my_mapper.getSignalObjectBySignalFullName(dest, "input")
+
+        if connection_data == None:
+            self.GetParent().GetParent().src_range_min.Clear()
+            self.GetParent().GetParent().src_range_max.Clear()
+            self.GetParent().GetParent().dest_range_min.Clear()
+            self.GetParent().GetParent().dest_range_max.Clear()
+        else:
+            self.GetParent().GetParent().src_range_min.SetValue(str(src_signal["min"]))
+            self.GetParent().GetParent().src_range_max.SetValue(str(src_signal["max"]))
+            self.GetParent().GetParent().dest_range_min.SetValue(str(dest_signal["min"]))
+            self.GetParent().GetParent().dest_range_max.SetValue(str(dest_signal["max"]))
 
     def changed(self, evt):
         self.GetParent().GetParent().redraw()
@@ -137,6 +150,7 @@ class MyTreeList(wx.Panel):
     #TODO: put some brain here
     def AddTreeNodes(self, parentItem, items):
         for item in items:
+            print item
             bg_color = 0
             if self.which == "destinations" and self.my_mapper.getInputsFromDevice(item):
                 newItem = self.tree.AppendItem(parentItem, item)

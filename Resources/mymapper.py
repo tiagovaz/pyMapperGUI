@@ -23,6 +23,13 @@ class MyMapper:
         self.mon.poll(50)
         return self.mon.db.get_connection_by_signal_full_names(src, dest)
 
+    def getSignalObjectBySignalFullName(self, dest, which):
+        device = "/" + dest.split("/")[1]
+        signal = "/"+"/".join(dest.split("/")[2:])
+        if which == "input":
+            return self.mon.db.get_input_by_device_and_signal_name(device, signal)
+        elif which == "output":
+            return self.mon.db.get_output_by_device_and_signal_name(device, signal)
 
     def getConnections(self):
         self.mon.poll(50)
