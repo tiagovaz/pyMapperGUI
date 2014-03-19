@@ -2,6 +2,12 @@ import wx
 from wx.lib.mixins.inspection import InspectionMixin
 from Resources.mymapper import MyMapper
 
+# float spin for setting min/max values:
+try:
+    from agw import floatspin as FS
+except ImportError: # if it's not there locally, try the wxPython lib.
+    import wx.lib.agw.floatspin as FS
+
 from Resources.panels import *
 
 
@@ -107,8 +113,14 @@ class MyFrame(wx.Frame):
         # source / dest range input
         self.toolbar.AddSeparator()
         self.src_range_label = wx.StaticText(self.toolbar, -1, " Source range: ")
-        self.src_range_min = wx.TextCtrl(self.toolbar, -1, "", size=(100, 26))
-        self.src_range_max = wx.TextCtrl(self.toolbar, -1, "", size=(100, 26))
+        self.src_range_min = FS.FloatSpin(self.toolbar, -1, increment=0.01, agwStyle=FS.FS_CENTRE, size=(100, 26))
+        self.src_range_min.SetFormat("%f")
+        self.src_range_min.SetDigits(2)
+
+        self.src_range_max = FS.FloatSpin(self.toolbar, -1, increment=0.01, agwStyle=FS.FS_CENTRE, size=(100, 26))
+        self.src_range_max.SetFormat("%f")
+        self.src_range_max.SetDigits(2)
+
 
         self.Bind(wx.EVT_TEXT, self.EvtTextSourceMin, self.src_range_min)
         self.Bind(wx.EVT_TEXT, self.EvtTextSourceMax, self.src_range_max)
@@ -119,8 +131,14 @@ class MyFrame(wx.Frame):
         self.toolbar.AddControl(self.src_range_max)
 
         self.dest_range_label = wx.StaticText(self.toolbar, -1, " Dest. range: ")
-        self.dest_range_min = wx.TextCtrl(self.toolbar, -1, "", size=(100, 26))
-        self.dest_range_max = wx.TextCtrl(self.toolbar, -1, "", size=(100, 26))
+        self.dest_range_min = FS.FloatSpin(self.toolbar, -1, increment=0.01, agwStyle=FS.FS_CENTRE, size=(100, 26))
+        self.dest_range_min.SetFormat("%f")
+        self.dest_range_min.SetDigits(2)
+
+
+        self.dest_range_max = FS.FloatSpin(self.toolbar, -1, increment=0.01, agwStyle=FS.FS_CENTRE, size=(100, 26))
+        self.dest_range_max.SetFormat("%f")
+        self.dest_range_max.SetDigits(2)
 
         self.Bind(wx.EVT_TEXT, self.EvtTextDestMin, self.dest_range_min)
         self.Bind(wx.EVT_TEXT, self.EvtTextDestMax, self.dest_range_max)
@@ -277,14 +295,13 @@ class MyFrame(wx.Frame):
     def OnSave(self, event):
         pass
 
-
     def OnLoad(self, event):
         pass
 
     def OnDelete(self, event):
         pass
 
-    def OnConnect(self, event):  #TODO: link just first connection
+    def OnConnect(self, event):  #TODO: link just if first connection
         self.my_mapper.setLink("/" + self.sources_panel.GetSignalAddress().split("/")[1],
                                "/" + self.destinations_panel.GetSignalAddress().split("/")[1], {})
         self.my_mapper.setNewConnection(self.sources_panel.GetSignalAddress(), self.destinations_panel.GetSignalAddress(),
@@ -309,7 +326,7 @@ class MyFrame(wx.Frame):
         self.sources_panel.ExpandAll()
         self.destinations_panel.ExpandAll()
 
-    def OnCollapseAll(self, event):  #FIXME: doesnt work :\
+    def OnCollapseAll(self, event):  #FIXME: for some reason it doesnt work :\
         self.sources_panel.CollapseAll()
         self.destinations_panel.CollapseAll()
 

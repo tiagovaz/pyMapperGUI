@@ -100,30 +100,27 @@ class MyTreeList(wx.Panel):
 
 
     def OnItemChanged(self, evt):
-        # show the connection expression in the toolbar
+        # show the connection expression and src/dest min/max in the toolbar
         src = self.GetParent().GetParent().sources_panel.GetSignalAddress()
         dest = self.GetParent().GetParent().destinations_panel.GetSignalAddress()
         connection_data = self.my_mapper.getConnectionBySignalFullNames(src, dest)
+
         if connection_data == None:
             self.GetParent().GetParent().expression_input.Clear()
-        else:
-            self.GetParent().GetParent().expression_input.SetValue(connection_data["expression"])
-
-        src_min = connection_data["src_min"]
-        src_max = connection_data["src_max"]
-        dest_min = connection_data["dest_min"]
-        dest_max = connection_data["dest_max"]
-
-        if connection_data == None:
             self.GetParent().GetParent().src_range_min.Clear()
             self.GetParent().GetParent().src_range_max.Clear()
             self.GetParent().GetParent().dest_range_min.Clear()
             self.GetParent().GetParent().dest_range_max.Clear()
         else:
-            self.GetParent().GetParent().src_range_min.SetValue(str(src_min))
-            self.GetParent().GetParent().src_range_max.SetValue(str(src_max))
-            self.GetParent().GetParent().dest_range_min.SetValue(str(dest_min))
-            self.GetParent().GetParent().dest_range_max.SetValue(str(dest_max))
+            src_min = connection_data["src_min"]
+            src_max = connection_data["src_max"]
+            dest_min = connection_data["dest_min"]
+            dest_max = connection_data["dest_max"]
+            self.GetParent().GetParent().expression_input.SetValue(connection_data["expression"])
+            self.GetParent().GetParent().src_range_min.SetValue(float(src_min))
+            self.GetParent().GetParent().src_range_max.SetValue(src_max)
+            self.GetParent().GetParent().dest_range_min.SetValue(dest_min)
+            self.GetParent().GetParent().dest_range_max.SetValue(dest_max)
 
     def changed(self, evt):
         self.GetParent().GetParent().redraw()

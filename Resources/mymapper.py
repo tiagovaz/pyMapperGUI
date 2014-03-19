@@ -1,7 +1,6 @@
 import mapper
 
-
-class MyMapper:  #TODO: refactore this to heritage from mapper library
+class MyMapper():  #TODO: refactore this to heritage from mapper library
     def __init__(self):
         self.mon = mapper.monitor()
         self.mon.request_devices()
@@ -23,7 +22,12 @@ class MyMapper:  #TODO: refactore this to heritage from mapper library
     def setSignalMax(self, signal, value):
         signal.set_max(value)
 
-    def setNewConnection(self, source, dest, action, options={}):
+    def setNewConnection(self, source, dest, action, options=None): #TODO: make config file for default conn setup
+        if not options: options = {'mode': mapper.MO_EXPRESSION,
+                                   'expression': 'y=x',
+                                   'src_min': 1,
+                                   'bound_min': mapper.BA_WRAP,
+                                   "bound_max": mapper.BA_CLAMP}
         self.mon.poll(20)
         if action == "connect":
             self.mon.connect(source, dest, options)
