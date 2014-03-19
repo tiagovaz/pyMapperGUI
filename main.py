@@ -108,8 +108,11 @@ class MyFrame(wx.Frame):
         self.toolbar.AddSeparator()
         self.src_range_label = wx.StaticText(self.toolbar, -1, " Source range: ")
         self.src_range_min = wx.TextCtrl(self.toolbar, -1, "", size=(100, 26))
-        self.Bind(wx.EVT_TEXT, self.EvtText, self.src_range_min)
         self.src_range_max = wx.TextCtrl(self.toolbar, -1, "", size=(100, 26))
+
+        self.Bind(wx.EVT_TEXT, self.EvtTextSourceMin, self.src_range_min)
+        self.Bind(wx.EVT_TEXT, self.EvtTextSourceMax, self.src_range_max)
+
         self.toolbar.AddControl(self.src_range_label)
         self.toolbar.AddControl(self.src_range_min)
         self.toolbar.AddControl(self.arrow_range)
@@ -118,6 +121,10 @@ class MyFrame(wx.Frame):
         self.dest_range_label = wx.StaticText(self.toolbar, -1, " Dest. range: ")
         self.dest_range_min = wx.TextCtrl(self.toolbar, -1, "", size=(100, 26))
         self.dest_range_max = wx.TextCtrl(self.toolbar, -1, "", size=(100, 26))
+
+        self.Bind(wx.EVT_TEXT, self.EvtTextDestMin, self.dest_range_min)
+        self.Bind(wx.EVT_TEXT, self.EvtTextDestMax, self.dest_range_max)
+
         self.toolbar.AddControl(self.dest_range_label)
         self.toolbar.AddControl(self.dest_range_min)
         self.toolbar.AddControl(self.arrow_range2)
@@ -236,13 +243,21 @@ class MyFrame(wx.Frame):
 
         self.Show()
 
-    def EvtText(self, event):
+    def EvtTextSourceMin(self, event):
+        print 'EvtText: %s\n' % event.GetString()
+
+    def EvtTextSourceMax(self, event):
+        print 'EvtText: %s\n' % event.GetString()
+
+    def EvtTextDestMin(self, event):
+        print 'EvtText: %s\n' % event.GetString()
+
+    def EvtTextDestMax(self, event):
         print 'EvtText: %s\n' % event.GetString()
 
     def EvtTextEnter(self, event):
         print 'EvtTextEnter\n'
         event.Skip()
-
 
     def RefreshAll(self):
         self.sources_panel.RefreshAll()
@@ -262,6 +277,7 @@ class MyFrame(wx.Frame):
     def OnSave(self, event):
         pass
 
+
     def OnLoad(self, event):
         pass
 
@@ -271,18 +287,18 @@ class MyFrame(wx.Frame):
     def OnConnect(self, event):  #TODO: link just first connection
         self.my_mapper.setLink("/" + self.sources_panel.GetSignalAddress().split("/")[1],
                                "/" + self.destinations_panel.GetSignalAddress().split("/")[1], {})
-        self.my_mapper.setConnection(self.sources_panel.GetSignalAddress(), self.destinations_panel.GetSignalAddress(),
+        self.my_mapper.setNewConnection(self.sources_panel.GetSignalAddress(), self.destinations_panel.GetSignalAddress(),
                                      action="connect", options={})
         self.connections_panel.DrawConnectionsLines()
 
     def OnDisconnect(self, event):  #TODO: unlink if last connection
-        self.my_mapper.setConnection(self.sources_panel.GetSignalAddress(), self.destinations_panel.GetSignalAddress(),
+        self.my_mapper.setNewConnection(self.sources_panel.GetSignalAddress(), self.destinations_panel.GetSignalAddress(),
                                      action="disconnect", options={})
         self.connections_panel.DrawConnectionsLines()
 
     def OnDisconnectAll(self, event):  #TODO: unlink if last connection
         for c in self.my_mapper.getConnections():
-            self.my_mapper.setConnection(c["src_name"], c["dest_name"], action="disconnect",
+            self.my_mapper.setNewConnection(c["src_name"], c["dest_name"], action="disconnect",
                                          options={})  #TODO: unlink ?
         self.connections_panel.DrawConnectionsLines()
 

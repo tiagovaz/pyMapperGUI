@@ -109,8 +109,10 @@ class MyTreeList(wx.Panel):
         else:
             self.GetParent().GetParent().expression_input.SetValue(connection_data["expression"])
 
-        src_signal = self.my_mapper.getSignalObjectBySignalFullName(src, "output")
-        dest_signal = self.my_mapper.getSignalObjectBySignalFullName(dest, "input")
+        src_min = connection_data["src_min"]
+        src_max = connection_data["src_max"]
+        dest_min = connection_data["dest_min"]
+        dest_max = connection_data["dest_max"]
 
         if connection_data == None:
             self.GetParent().GetParent().src_range_min.Clear()
@@ -118,10 +120,10 @@ class MyTreeList(wx.Panel):
             self.GetParent().GetParent().dest_range_min.Clear()
             self.GetParent().GetParent().dest_range_max.Clear()
         else:
-            self.GetParent().GetParent().src_range_min.SetValue(str(src_signal["min"]))
-            self.GetParent().GetParent().src_range_max.SetValue(str(src_signal["max"]))
-            self.GetParent().GetParent().dest_range_min.SetValue(str(dest_signal["min"]))
-            self.GetParent().GetParent().dest_range_max.SetValue(str(dest_signal["max"]))
+            self.GetParent().GetParent().src_range_min.SetValue(str(src_min))
+            self.GetParent().GetParent().src_range_max.SetValue(str(src_max))
+            self.GetParent().GetParent().dest_range_min.SetValue(str(dest_min))
+            self.GetParent().GetParent().dest_range_max.SetValue(str(dest_max))
 
     def changed(self, evt):
         self.GetParent().GetParent().redraw()
@@ -141,7 +143,7 @@ class MyTreeList(wx.Panel):
     def NewConnection(self):
         # set link and connection with libmapper
         self.my_mapper.setLink("/"+self.GetParent().GetParent().sources_panel.GetSignalAddress().split("/")[1], "/"+self.GetParent().GetParent().destinations_panel.GetSignalAddress().split("/")[1], {})
-        self.my_mapper.setConnection(self.GetParent().GetParent().sources_panel.GetSignalAddress(), self.GetParent().GetParent().destinations_panel.GetSignalAddress(), action="connect", options={})
+        self.my_mapper.setNewConnection(self.GetParent().GetParent().sources_panel.GetSignalAddress(), self.GetParent().GetParent().destinations_panel.GetSignalAddress(), action="connect", options={})
 
     def OnSize(self, evt):
         self.tree.SetSize(self.GetSize())
