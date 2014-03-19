@@ -26,6 +26,7 @@ class ConnectionsPanel(wx.Panel):
         for c in self.my_mapper.getConnections():
             src = c["src_name"]
             dest = c["dest_name"]
+            #TODO: draw red lines for linked devices
             src_item_id = self.GetParent().GetParent().sources_panel.GetItemByLabel(src, self.GetParent().GetParent().sources_panel.GetRootItem())
             dest_item_id = self.GetParent().GetParent().destinations_panel.GetItemByLabel(dest, self.GetParent().GetParent().destinations_panel.GetRootItem())
             conn_ids.append((src_item_id, dest_item_id))
@@ -140,7 +141,7 @@ class MyTreeList(wx.Panel):
     def NewConnection(self):
         # set link and connection with libmapper
         self.my_mapper.setLink("/"+self.GetParent().GetParent().sources_panel.GetSignalAddress().split("/")[1], "/"+self.GetParent().GetParent().destinations_panel.GetSignalAddress().split("/")[1], {})
-        self.my_mapper.setNewConnection(self.GetParent().GetParent().sources_panel.GetSignalAddress(), self.GetParent().GetParent().destinations_panel.GetSignalAddress(), action="connect", options={})
+        self.my_mapper.Connect(self.GetParent().GetParent().sources_panel.GetSignalAddress(), self.GetParent().GetParent().destinations_panel.GetSignalAddress(), options={})
 
     def OnSize(self, evt):
         self.tree.SetSize(self.GetSize())
@@ -183,7 +184,6 @@ class MyTreeList(wx.Panel):
 
     def RefreshAll(self):
         # Add nodes (devices and their signals) to the trees
-        # TODO:
         # keep last devices list, compare with current and update if changed
         # same for removing item (DO NOT REBUILD ALL TREE)
         self.tree.DeleteAllItems()

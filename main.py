@@ -5,7 +5,7 @@ from Resources.mymapper import MyMapper
 # float spin for setting min/max values:
 try:
     from agw import floatspin as FS
-except ImportError: # if it's not there locally, try the wxPython lib.
+except ImportError:  # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.floatspin as FS
 
 from Resources.panels import *
@@ -135,7 +135,6 @@ class MyFrame(wx.Frame):
         self.dest_range_min = FS.FloatSpin(self.toolbar, -1, increment=0.01, agwStyle=FS.FS_CENTRE, size=(100, 23))
         self.dest_range_min.SetFormat("%f")
         self.dest_range_min.SetDigits(2)
-
 
         self.dest_range_max = FS.FloatSpin(self.toolbar, -1, increment=0.01, agwStyle=FS.FS_CENTRE, size=(100, 23))
         self.dest_range_max.SetFormat("%f")
@@ -305,19 +304,19 @@ class MyFrame(wx.Frame):
     def OnConnect(self, event):  #TODO: link just if first connection
         self.my_mapper.setLink("/" + self.sources_panel.GetSignalAddress().split("/")[1],
                                "/" + self.destinations_panel.GetSignalAddress().split("/")[1], {})
-        self.my_mapper.setNewConnection(self.sources_panel.GetSignalAddress(), self.destinations_panel.GetSignalAddress(),
-                                     action="connect", options={})
+        self.my_mapper.Connect(self.sources_panel.GetSignalAddress(),
+                                        self.destinations_panel.GetSignalAddress(),
+                                        options={})
         self.connections_panel.DrawConnectionsLines()
 
     def OnDisconnect(self, event):  #TODO: unlink if last connection
-        self.my_mapper.setNewConnection(self.sources_panel.GetSignalAddress(), self.destinations_panel.GetSignalAddress(),
-                                     action="disconnect", options={})
+        self.my_mapper.Disconnect(self.sources_panel.GetSignalAddress(),
+                                        self.destinations_panel.GetSignalAddress())
         self.connections_panel.DrawConnectionsLines()
 
-    def OnDisconnectAll(self, event):  #TODO: unlink if last connection
+    def OnDisconnectAll(self, event):  #TODO: unlink if last connection (or keep it linked?)
         for c in self.my_mapper.getConnections():
-            self.my_mapper.setNewConnection(c["src_name"], c["dest_name"], action="disconnect",
-                                         options={})  #TODO: unlink ?
+            self.my_mapper.Disconnect(c["src_name"], c["dest_name"])  #TODO: unlink ?
         self.connections_panel.DrawConnectionsLines()
 
     def OnRefresh(self, event):

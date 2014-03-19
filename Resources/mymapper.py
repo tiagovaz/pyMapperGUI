@@ -22,17 +22,15 @@ class MyMapper():  #TODO: refactore this to heritage from mapper library
     def setSignalMax(self, signal, value):
         signal.set_max(value)
 
-    def setNewConnection(self, source, dest, action, options=None): #TODO: make config file for default conn setup
-        if not options: options = {'mode': mapper.MO_EXPRESSION,
-                                   'expression': 'y=x',
-                                   'src_min': 1,
-                                   'bound_min': mapper.BA_WRAP,
-                                   "bound_max": mapper.BA_CLAMP}
+    #TODO: use mapper callbacks for drawing lines after new connections or disconnections
+    def Connect(self, src, dest, options=None): #TODO: make config file for default conn setup
+        if not options: options = dict(mode=mapper.MO_EXPRESSION, expression='y=x', src_min=1, bound_min=mapper.BA_WRAP,
+                                       bound_max=mapper.BA_CLAMP)
         self.mon.poll(20)
-        if action == "connect":
-            self.mon.connect(source, dest, options)
-        elif action == "disconnect":
-            self.mon.disconnect(source, dest)
+        self.mon.connect(src, dest, options)
+
+    def Disconnect(self, src, dest):
+        self.mon.disconnect(src, dest)
 
     def getConnectionBySignalFullNames(self, src, dest):
         self.mon.poll(20)
@@ -74,4 +72,3 @@ if __name__ == "__main__":
     #   print m.getOutputsFromDevice('/om.1')
     #   print m.Connect("/om.1", "/om.2")
     print m.getConnections()
-
