@@ -107,20 +107,21 @@ class MyFrame(wx.Frame):
         self.toolbar.AddControl(self.expression_y)
         self.toolbar.AddControl(self.expression_input)
 
-        self.arrow_range = wx.StaticText(self.toolbar, -1, "-")
-        self.arrow_range2 = wx.StaticText(self.toolbar, -1, "-")
+        self.arrow_range = wx.StaticText(self.toolbar, -1, " - ")
+        self.arrow_range2 = wx.StaticText(self.toolbar, -1, " - ")
 
         # source / dest range input
+        #TODO: focus/unfocus min/max entries
+        #TODO: set increment based on current value (cool!)
         self.toolbar.AddSeparator()
-        self.src_range_label = wx.StaticText(self.toolbar, -1, " Source range: ")
-        self.src_range_min = FS.FloatSpin(self.toolbar, -1, increment=0.01, agwStyle=FS.FS_CENTRE, size=(100, 26))
+        self.src_range_label = wx.StaticText(self.toolbar, -1, " Src. range: ")
+        self.src_range_min = FS.FloatSpin(self.toolbar, -1, increment=0.01, agwStyle=FS.FS_CENTRE, size=(100, 23))
         self.src_range_min.SetFormat("%f")
         self.src_range_min.SetDigits(2)
 
-        self.src_range_max = FS.FloatSpin(self.toolbar, -1, increment=0.01, agwStyle=FS.FS_CENTRE, size=(100, 26))
+        self.src_range_max = FS.FloatSpin(self.toolbar, -1, increment=0.01, agwStyle=FS.FS_CENTRE, size=(100, 23))
         self.src_range_max.SetFormat("%f")
         self.src_range_max.SetDigits(2)
-
 
         self.Bind(wx.EVT_TEXT, self.EvtTextSourceMin, self.src_range_min)
         self.Bind(wx.EVT_TEXT, self.EvtTextSourceMax, self.src_range_max)
@@ -131,12 +132,12 @@ class MyFrame(wx.Frame):
         self.toolbar.AddControl(self.src_range_max)
 
         self.dest_range_label = wx.StaticText(self.toolbar, -1, " Dest. range: ")
-        self.dest_range_min = FS.FloatSpin(self.toolbar, -1, increment=0.01, agwStyle=FS.FS_CENTRE, size=(100, 26))
+        self.dest_range_min = FS.FloatSpin(self.toolbar, -1, increment=0.01, agwStyle=FS.FS_CENTRE, size=(100, 23))
         self.dest_range_min.SetFormat("%f")
         self.dest_range_min.SetDigits(2)
 
 
-        self.dest_range_max = FS.FloatSpin(self.toolbar, -1, increment=0.01, agwStyle=FS.FS_CENTRE, size=(100, 26))
+        self.dest_range_max = FS.FloatSpin(self.toolbar, -1, increment=0.01, agwStyle=FS.FS_CENTRE, size=(100, 23))
         self.dest_range_max.SetFormat("%f")
         self.dest_range_max.SetDigits(2)
 

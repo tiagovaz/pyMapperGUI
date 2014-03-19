@@ -105,19 +105,19 @@ class MyTreeList(wx.Panel):
         dest = self.GetParent().GetParent().destinations_panel.GetSignalAddress()
         connection_data = self.my_mapper.getConnectionBySignalFullNames(src, dest)
 
-        if connection_data == None:
+        if connection_data is None:
             self.GetParent().GetParent().expression_input.Clear()
-            self.GetParent().GetParent().src_range_min.Clear()
-            self.GetParent().GetParent().src_range_max.Clear()
-            self.GetParent().GetParent().dest_range_min.Clear()
-            self.GetParent().GetParent().dest_range_max.Clear()
+            self.GetParent().GetParent().src_range_min.SetToDefaultValue()
+            self.GetParent().GetParent().src_range_max.SetToDefaultValue()
+            self.GetParent().GetParent().dest_range_min.SetToDefaultValue()
+            self.GetParent().GetParent().dest_range_max.SetToDefaultValue()
         else:
             src_min = connection_data["src_min"]
             src_max = connection_data["src_max"]
             dest_min = connection_data["dest_min"]
             dest_max = connection_data["dest_max"]
             self.GetParent().GetParent().expression_input.SetValue(connection_data["expression"])
-            self.GetParent().GetParent().src_range_min.SetValue(float(src_min))
+            self.GetParent().GetParent().src_range_min.SetValue(src_min)
             self.GetParent().GetParent().src_range_max.SetValue(src_max)
             self.GetParent().GetParent().dest_range_min.SetValue(dest_min)
             self.GetParent().GetParent().dest_range_max.SetValue(dest_max)
