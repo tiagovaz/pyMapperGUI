@@ -140,8 +140,13 @@ class MyTreeList(wx.Panel):
 
     def NewConnection(self):
         # set link and connection with libmapper
-        self.my_mapper.setLink("/"+self.GetParent().GetParent().sources_panel.GetSignalAddress().split("/")[1], "/"+self.GetParent().GetParent().destinations_panel.GetSignalAddress().split("/")[1], {})
-        self.my_mapper.Connect(self.GetParent().GetParent().sources_panel.GetSignalAddress(), self.GetParent().GetParent().destinations_panel.GetSignalAddress(), options={})
+        # TODO: set link only if there's no link
+        conns = self.my_mapper.getConnectionBySignalFullNames(self.GetParent().GetParent().sources_panel.GetSignalAddress(), self.GetParent().GetParent().destinations_panel.GetSignalAddress())
+        if conns is None:
+            self.my_mapper.setLink("/"+self.GetParent().GetParent().sources_panel.GetSignalAddress().split("/")[1], "/"+self.GetParent().GetParent().destinations_panel.GetSignalAddress().split("/")[1], {})
+            self.my_mapper.Connect(self.GetParent().GetParent().sources_panel.GetSignalAddress(), self.GetParent().GetParent().destinations_panel.GetSignalAddress(), options={})
+        else:
+            self.my_mapper.Disconnect(self.GetParent().GetParent().sources_panel.GetSignalAddress(), self.GetParent().GetParent().destinations_panel.GetSignalAddress())
 
     def OnSize(self, evt):
         self.tree.SetSize(self.GetSize())

@@ -57,17 +57,11 @@ class MyFrame(wx.Frame):
 
         self.toolbar.AddSeparator()
 
-        ### connect
-        connect_ico = wx.Bitmap(icons_folder + 'connect.png')
-        connect_tool = self.toolbar.AddSimpleTool(wx.ID_ANY, connect_ico, "Connect",
-                                                  "Connects selected source to selected destination.")
-        self.Bind(wx.EVT_MENU, self.OnConnect, connect_tool)
-
-        ### disconnect
-        disconnect_ico = wx.Bitmap(icons_folder + 'disconnect.png')
-        disconnect_tool = self.toolbar.AddSimpleTool(wx.ID_ANY, disconnect_ico, "Disconnect",
-                                                     "Disconnects selected source from selected destination.")
-        self.Bind(wx.EVT_MENU, self.OnDisconnect, disconnect_tool)
+        ### refresh all
+        refresh_ico = wx.Bitmap(icons_folder + 'view-refresh.png')
+        refresh_tool = self.toolbar.AddSimpleTool(wx.ID_ANY, refresh_ico, "Refresh",
+                                                  "Refresh all devices, signals and connections.")
+        self.Bind(wx.EVT_MENU, self.OnRefresh, refresh_tool)
 
         ### disconnect all
         disconnect_all_ico = wx.Bitmap(icons_folder + 'process-stop.png')
@@ -75,11 +69,6 @@ class MyFrame(wx.Frame):
                                                          "Disconnects everything!")
         self.Bind(wx.EVT_MENU, self.OnDisconnectAll, disconnect_all_tool)
 
-        ### refresh all
-        refresh_ico = wx.Bitmap(icons_folder + 'view-refresh.png')
-        refresh_tool = self.toolbar.AddSimpleTool(wx.ID_ANY, refresh_ico, "Refresh",
-                                                  "Refresh all devices, signals and connections.")
-        self.Bind(wx.EVT_MENU, self.OnRefresh, refresh_tool)
 
         self.toolbar.AddSeparator()
 
