@@ -15,6 +15,10 @@ class MyFrame(wx.Frame):
     def __init__(self, parent, title, size):
         wx.Frame.__init__(self, parent, -1, title=title, size=size)
 
+        # mapper object
+        self.my_mapper = mymapper.MyMapper()
+        self.modes_list = self.my_mapper.modes_dict.keys()
+
         ############### widgets & bindings ########################################3
 
         ## main panel
@@ -69,12 +73,10 @@ class MyFrame(wx.Frame):
                                                          "Disconnects everything!")
         self.Bind(wx.EVT_MENU, self.OnDisconnectAll, disconnect_all_tool)
 
-
         self.toolbar.AddSeparator()
 
         # connections setup
-        modes_list = ['Bypass', 'Linear', 'Calibration', 'Reverse', 'Expression']
-        self.mode_choice = wx.Choice(self.toolbar, -1, (100, 50), choices=modes_list)
+        self.mode_choice = wx.Choice(self.toolbar, -1, (100, 50), choices=self.modes_list)
         self.mode_choice.Disable()
         self.toolbar.AddControl(self.mode_choice)
         self.Bind(wx.EVT_CHOICE, self.EvtModeChoice, self.mode_choice)
@@ -245,9 +247,6 @@ class MyFrame(wx.Frame):
         main_box.Fit(self)
         main_box.SetSizeHints(self)
         self.main_panel.SetSizer(main_box)
-
-        # mapper object
-        self.my_mapper = mymapper.MyMapper()
 
         # mapper poll
         self.timer = wx.Timer(self)

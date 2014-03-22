@@ -130,8 +130,9 @@ class MyTreeList(wx.Panel):
             # enable controls
             self.GetParent().GetParent().mode_choice.Enable()
             self.GetParent().GetParent().mute_tool.Enable()
-            self.GetParent().GetParent().expression_input.Enable()
-            self.GetParent().GetParent().expression_y.Enable()
+            if connection_data["mode"] == self.my_mapper.mo_expression:
+                self.GetParent().GetParent().expression_input.Enable()
+                self.GetParent().GetParent().expression_y.Enable()
             self.GetParent().GetParent().arrow_range.Enable()
             self.GetParent().GetParent().arrow_range2.Enable()
             self.GetParent().GetParent().src_range_label.Enable()
@@ -150,6 +151,12 @@ class MyTreeList(wx.Panel):
                 self.GetParent().GetParent().mute_tool.SetValue(True)
             elif connection_data["muted"] == 0:
                 self.GetParent().GetParent().mute_tool.SetValue(False)
+
+            # we need to match connection mode index with the choice index in the control panel:
+            mode = int(connection_data["mode"])
+            mode_choice_index = self.GetParent().GetParent().modes_list.index(self.my_mapper.modes_dict_rev[mode])
+            self.GetParent().GetParent().mode_choice.SetSelection(mode_choice_index)
+
             self.GetParent().GetParent().expression_input.SetValue(connection_data["expression"].split('=')[1])
             self.GetParent().GetParent().src_range_min.SetValue(src_min)
             self.GetParent().GetParent().src_range_max.SetValue(src_max)

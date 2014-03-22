@@ -6,6 +6,17 @@ class MyMapper():  #TODO: refactore this to heritage from mapper library
         self.mon.request_devices()
         self.mon.request_links_by_src_device_name("/*")
 
+        self.mo_calibrate = mapper.MO_CALIBRATE
+        self.mo_expression = mapper.MO_EXPRESSION
+        self.mo_reverse = mapper.MO_REVERSE
+        self.mo_linear = mapper.MO_LINEAR
+        self.mo_bypass = mapper.MO_BYPASS
+
+        self.modes_dict = {'Bypass': mapper.MO_BYPASS, 'Calibrate': mapper.MO_CALIBRATE, 'Reverse': mapper.MO_REVERSE,
+                           'Linear': mapper.MO_LINEAR, 'Expression': mapper.MO_EXPRESSION}
+        # we often need to fetch reversed info from the dictionay above:
+        self.modes_dict_rev = dict((v,k) for k, v in self.modes_dict.iteritems())
+
     def poll(self, time):
         self.mon.poll(time)
 
@@ -32,10 +43,10 @@ class MyMapper():  #TODO: refactore this to heritage from mapper library
     def Disconnect(self, src, dest):
         self.mon.disconnect(src, dest)
 
-    def Unlink(self):
+    def Link(self):
         pass
 
-    def Link(self):
+    def Unlink(self):
         pass
 
     def Modify(self, src, dest, options=None):
