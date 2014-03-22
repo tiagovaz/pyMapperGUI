@@ -125,8 +125,8 @@ class MyFrame(wx.Frame):
         self.src_range_max.SetFormat("%f")
         self.src_range_max.SetDigits(2)
 
-        self.Bind(wx.EVT_TEXT, self.EvtTextSourceMin, self.src_range_min)
-        self.Bind(wx.EVT_TEXT, self.EvtTextSourceMax, self.src_range_max)
+        self.Bind(FS.EVT_FLOATSPIN, self.OnSetSourceMin, self.src_range_min)
+        self.Bind(FS.EVT_FLOATSPIN, self.OnSetSourceMax, self.src_range_max)
 
         self.toolbar.AddControl(self.src_range_label)
         self.toolbar.AddControl(self.src_range_min)
@@ -145,8 +145,8 @@ class MyFrame(wx.Frame):
         self.dest_range_max.SetFormat("%f")
         self.dest_range_max.SetDigits(2)
 
-        self.Bind(wx.EVT_TEXT, self.EvtTextDestMin, self.dest_range_min)
-        self.Bind(wx.EVT_TEXT, self.EvtTextDestMax, self.dest_range_max)
+        self.Bind(FS.EVT_FLOATSPIN, self.OnSetDestMin, self.dest_range_min)
+        self.Bind(FS.EVT_FLOATSPIN, self.OnSetDestMax, self.dest_range_max)
 
         self.toolbar.AddControl(self.dest_range_label)
         self.toolbar.AddControl(self.dest_range_min)
@@ -299,17 +299,30 @@ class MyFrame(wx.Frame):
                                                                         self.destinations_panel.GetSignalAddress())
         self.expression_input.SetValue(connection_data["expression"].split('=')[1])
 
-    def EvtTextSourceMin(self, event):
-        print 'EvtText: %s\n' % event.GetString()
+    #TODO: do not repeat code
+    def OnSetSourceMin(self, event):
+        f = event.GetEventObject().GetValue()
+        self.my_mapper.Modify(self.sources_panel.GetSignalAddress(),
+                              self.destinations_panel.GetSignalAddress(),
+                              options={'src_min': f})
 
-    def EvtTextSourceMax(self, event):
-        print 'EvtText: %s\n' % event.GetString()
+    def OnSetSourceMax(self, event):
+        f = event.GetEventObject().GetValue()
+        self.my_mapper.Modify(self.sources_panel.GetSignalAddress(),
+                              self.destinations_panel.GetSignalAddress(),
+                              options={'src_max': f})
 
-    def EvtTextDestMin(self, event):
-        print 'EvtText: %s\n' % event.GetString()
+    def OnSetDestMin(self, event):
+        f = event.GetEventObject().GetValue()
+        self.my_mapper.Modify(self.sources_panel.GetSignalAddress(),
+                              self.destinations_panel.GetSignalAddress(),
+                              options={'dest_min': f})
 
-    def EvtTextDestMax(self, event):
-        print 'EvtText: %s\n' % event.GetString()
+    def OnSetDestMax(self, event):
+        f = event.GetEventObject().GetValue()
+        self.my_mapper.Modify(self.sources_panel.GetSignalAddress(),
+                              self.destinations_panel.GetSignalAddress(),
+                              options={'dest_max': f})
 
     def EvtTextEnter(self, event):
         print 'EvtTextEnter\n'
@@ -328,6 +341,7 @@ class MyFrame(wx.Frame):
         #self.connections_panel.DrawConnectionsLines()
         statusbar_text = str(len(self.my_mapper.getConnections())) + " connection(s)"
         self.statusbar.SetStatusText(statusbar_text)
+        self.my_mapper.poll(50)
         #self.RefreshAll()
 
     def OnSave(self, event):

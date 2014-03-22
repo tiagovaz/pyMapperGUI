@@ -35,7 +35,7 @@ class MyMapper():  #TODO: refactore this to heritage from mapper library
 
     #TODO: use mapper callbacks for drawing lines after new connections or disconnections
     def Connect(self, src, dest, options=None): #TODO: make config file for default conn setup
-        if not options: options = dict(mode=mapper.MO_LINEAR, src_min=1, bound_min=mapper.BA_WRAP,
+        if not options: options = dict(mode=mapper.MO_LINEAR, bound_min=mapper.BA_WRAP,
                                        bound_max=mapper.BA_CLAMP)
         self.mon.poll(20)
         self.mon.connect(src, dest, options)
@@ -52,10 +52,10 @@ class MyMapper():  #TODO: refactore this to heritage from mapper library
     def Modify(self, src, dest, options=None):
         self.mon.modify_connection(src, dest, options)
         print src, dest, options
-        self.mon.poll(200)
+        self.mon.poll(5)
 
     def getConnectionBySignalFullNames(self, src, dest):
-        self.mon.poll(20)
+        self.mon.poll(5)
         return self.mon.db.get_connection_by_signal_full_names(src, dest)
 
     def getSignalObjectBySignalFullName(self, dest, which):

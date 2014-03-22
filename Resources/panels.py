@@ -135,6 +135,10 @@ class MyTreeList(wx.Panel):
                 self.GetParent().GetParent().expression_input.Enable()
                 self.GetParent().GetParent().expression_y.Enable()
                 self.GetParent().GetParent().set_expr_tool.Enable()
+            else:
+                self.GetParent().GetParent().expression_input.Disable()
+                self.GetParent().GetParent().expression_y.Disable()
+                self.GetParent().GetParent().set_expr_tool.Disable()
 
             self.GetParent().GetParent().arrow_range.Enable()
             self.GetParent().GetParent().arrow_range2.Enable()
@@ -260,7 +264,8 @@ class MyTreeList(wx.Panel):
         return self.tree.GetSelection()
 
     def GetSignalAddress(self): #TODO: make this more readable
-        return str(self.tree.GetItemText(self.tree.GetItemParent(self.tree.GetSelection())) + self.tree.GetItemText(self.tree.GetSelection()))
+        return str(self.tree.GetItemText(self.tree.GetItemParent(self.tree.GetSelection())) +
+                   self.tree.GetItemText(self.tree.GetSelection()))
 
     def GetItemText(self, item):
         if item:
