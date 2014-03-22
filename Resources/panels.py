@@ -99,7 +99,6 @@ class MyTreeList(wx.Panel):
         # Expand the first level by default
         self.tree.ExpandAll(self.root)
 
-
     def OnItemChanged(self, evt):
         # show the connection expression and src/dest min/max in the toolbar
         src = self.GetParent().GetParent().sources_panel.GetSignalAddress()
@@ -111,6 +110,8 @@ class MyTreeList(wx.Panel):
             self.GetParent().GetParent().mode_choice.Disable()
             self.GetParent().GetParent().mute_tool.Disable()
             self.GetParent().GetParent().expression_input.Disable()
+            self.GetParent().GetParent().expression_y.Disable()
+            self.GetParent().GetParent().set_expr_tool.Disable()
             self.GetParent().GetParent().arrow_range.Disable()
             self.GetParent().GetParent().arrow_range2.Disable()
             self.GetParent().GetParent().src_range_label.Disable()
@@ -133,6 +134,8 @@ class MyTreeList(wx.Panel):
             if connection_data["mode"] == self.my_mapper.mo_expression:
                 self.GetParent().GetParent().expression_input.Enable()
                 self.GetParent().GetParent().expression_y.Enable()
+                self.GetParent().GetParent().set_expr_tool.Enable()
+
             self.GetParent().GetParent().arrow_range.Enable()
             self.GetParent().GetParent().arrow_range2.Enable()
             self.GetParent().GetParent().src_range_label.Enable()
@@ -163,10 +166,7 @@ class MyTreeList(wx.Panel):
             self.GetParent().GetParent().dest_range_min.SetValue(dest_min)
             self.GetParent().GetParent().dest_range_max.SetValue(dest_max)
 
-        #TODO: toggle mute if connections is muted
-
-
-    def changed(self, evt):
+    def changed(self, event):
         self.GetParent().GetParent().redraw()
 
     def getItemPos(self, item):
@@ -177,7 +177,7 @@ class MyTreeList(wx.Panel):
     def getCurrentItem(self):
         return self.tree.GetCurrentItem()
 
-    def OnActivate(self, evt):
+    def OnActivate(self, event):
         self.NewConnection()
         self.GetParent().GetParent().connections_panel.DrawConnectionsLines()
 
@@ -191,7 +191,7 @@ class MyTreeList(wx.Panel):
         else:
             self.my_mapper.Disconnect(self.GetParent().GetParent().sources_panel.GetSignalAddress(), self.GetParent().GetParent().destinations_panel.GetSignalAddress())
 
-    def OnSize(self, evt):
+    def OnSize(self, event):
         self.tree.SetSize(self.GetSize())
 
 
@@ -234,12 +234,12 @@ class MyTreeList(wx.Panel):
         # Add nodes (devices and their signals) to the trees
         # keep last devices list, compare with current and update if changed
         # same for removing item (DO NOT REBUILD ALL TREE)
+        # UPDATE: consider using mapper callbacks
         self.tree.DeleteAllItems()
         self.root = self.tree.AddRoot("") # hidden root
         self.devices = self.my_mapper.getAllDevices()
         self.AddTreeNodes(self.root, self.devices)
         self.tree.Refresh()
-
 
     def OnExpand(self, event):
         self.ExpandAll()

@@ -79,7 +79,7 @@ class MyFrame(wx.Frame):
         self.mode_choice = wx.Choice(self.toolbar, -1, (100, 50), choices=self.modes_list)
         self.mode_choice.Disable()
         self.toolbar.AddControl(self.mode_choice)
-        self.Bind(wx.EVT_CHOICE, self.EvtModeChoice, self.mode_choice)
+        self.Bind(wx.EVT_CHOICE, self.OnSetMode, self.mode_choice)
 
         # expression for mapping
         self.expression_y = wx.StaticText(self.toolbar, -1, " y = ")
@@ -89,10 +89,18 @@ class MyFrame(wx.Frame):
         self.toolbar.AddControl(self.expression_y)
         self.toolbar.AddControl(self.expression_input)
 
+        # set expression button
+        # TODO: add set expr icon
+        # expr_ico = wx.Bitmap(icons_folder + 'audio-volume-muted-blocked-panel.png')
+        self.set_expr_tool = wx.Button(self.toolbar, -1, "Set", size=(40, 26))
+        self.set_expr_tool.Disable()
+        self.Bind(wx.EVT_BUTTON, self.OnSetExpr, self.set_expr_tool)
+        self.toolbar.AddControl(self.set_expr_tool)
+
         # mute button
-        # TODO: add icon
-        mute_ico = wx.Bitmap(icons_folder + 'audio-volume-muted-blocked-panel.png')
-        self.mute_tool = wx.ToggleButton(self.toolbar, -1, "Mute")
+        # TODO: add mute icon
+        # mute_ico = wx.Bitmap(icons_folder + 'audio-volume-muted-blocked-panel.png')
+        self.mute_tool = wx.ToggleButton(self.toolbar, -1, "Mute", size=(50, 26))
         self.mute_tool.Disable()
         self.Bind(wx.EVT_TOGGLEBUTTON, self.OnMute, self.mute_tool)
         self.toolbar.AddControl(self.mute_tool)
@@ -175,25 +183,25 @@ class MyFrame(wx.Frame):
         ### expand all src
         expand_src_button = wx.BitmapButton(self.main_panel, -1, expand_icon, (16, 16),
                                             (expand_icon.GetWidth() + 5, expand_icon.GetHeight() + 5))
-        expand_src_button.SetToolTipString("This is a bitmap button.")
+        expand_src_button.SetToolTipString("Expand all")
         self.Bind(wx.EVT_BUTTON, self.sources_panel.OnExpand, expand_src_button)
 
         ### expand all dest
         expand_dest_button = wx.BitmapButton(self.main_panel, -1, expand_icon, (16, 16),
                                              (expand_icon.GetWidth() + 5, expand_icon.GetHeight() + 5))
-        expand_dest_button.SetToolTipString("This is a bitmap button.")
+        expand_dest_button.SetToolTipString("Expand all")
         self.Bind(wx.EVT_BUTTON, self.destinations_panel.OnExpand, expand_dest_button)
 
         ### collapse all src
         collapse_src_button = wx.BitmapButton(self.main_panel, -1, collapse_icon, (16, 16),
                                               (collapse_icon.GetWidth() + 5, collapse_icon.GetHeight() + 18))
-        collapse_src_button.SetToolTipString("This is a bitmap button.")
+        collapse_src_button.SetToolTipString("Collapse all")
         self.Bind(wx.EVT_BUTTON, self.sources_panel.OnCollapse, collapse_src_button)
 
         ### collapse all dest
         collapse_dest_button = wx.BitmapButton(self.main_panel, -1, collapse_icon, (16, 16),
                                                (collapse_icon.GetWidth() + 5, collapse_icon.GetHeight() + 18))
-        collapse_dest_button.SetToolTipString("This is a bitmap button.")
+        collapse_dest_button.SetToolTipString("Collapse all")
         self.Bind(wx.EVT_BUTTON, self.destinations_panel.OnCollapse, collapse_dest_button)
 
         ################ layout #########################################
@@ -261,11 +269,35 @@ class MyFrame(wx.Frame):
         else:
             is_muted = False
         self.my_mapper.Modify(self.sources_panel.GetSignalAddress(),
-                               self.destinations_panel.GetSignalAddress(),
-                               options={'muted':is_muted})
+                              self.destinations_panel.GetSignalAddress(),
+                              options={'muted': is_muted})
 
-    def EvtModeChoice(self, event):
-        print event.GetString()
+    def OnSetExpr(self, event):
+        expression = 'y=' + self.expression_input.GetValue()
+        print expression
+        self.my_mapper.Modify(self.sources_panel.GetSignalAddress(),
+                              self.destinations_panel.GetSignalAddress(),
+                              options={'expression': str(expression)})
+
+    def OnSetMode(self, event):
+        mode_str = event.GetString()
+        mode_mapper_index = self.my_mapper.modes_dict[mode_str]
+        self.my_mapper.Modify(self.sources_panel.GetSignalAddress(),
+                              self.destinations_panel.GetSignalAddress(),
+                              options={'mode': mode_mapper_index})
+        if mode_mapper_index == self.my_mapper.mo_expression:
+            self.expression_input.Enable()
+            self.expression_y.Enable()
+            self.set_expr_tool.Enable()
+        else:
+            self.expression_input.Disable()
+            self.expression_y.Disable()
+            self.set_expr_tool.Disable()
+        # update expression after changing mode
+        #TODO: do not use a mapper instance here and another in panels...
+        connection_data = self.my_mapper.getConnectionBySignalFullNames(self.sources_panel.GetSignalAddress(),
+                                                                        self.destinations_panel.GetSignalAddress())
+        self.expression_input.SetValue(connection_data["expression"].split('=')[1])
 
     def EvtTextSourceMin(self, event):
         print 'EvtText: %s\n' % event.GetString()
