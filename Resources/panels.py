@@ -107,12 +107,38 @@ class MyTreeList(wx.Panel):
         connection_data = self.my_mapper.getConnectionBySignalFullNames(src, dest)
 
         if connection_data is None:
+            # disable controls
+            self.GetParent().GetParent().mode_choice.Disable()
+            self.GetParent().GetParent().mute_tool.Disable()
+            self.GetParent().GetParent().expression_input.Disable()
+            self.GetParent().GetParent().arrow_range.Disable()
+            self.GetParent().GetParent().arrow_range2.Disable()
+            self.GetParent().GetParent().src_range_label.Disable()
+            self.GetParent().GetParent().src_range_min.Disable()
+            self.GetParent().GetParent().src_range_max.Disable()
+            self.GetParent().GetParent().dest_range_label.Disable()
+            self.GetParent().GetParent().dest_range_min.Disable()
+            self.GetParent().GetParent().dest_range_max.Disable()
+
             self.GetParent().GetParent().expression_input.Clear()
             self.GetParent().GetParent().src_range_min.SetToDefaultValue()
             self.GetParent().GetParent().src_range_max.SetToDefaultValue()
             self.GetParent().GetParent().dest_range_min.SetToDefaultValue()
             self.GetParent().GetParent().dest_range_max.SetToDefaultValue()
         else:
+            # enable controls
+            self.GetParent().GetParent().mode_choice.Enable()
+            self.GetParent().GetParent().mute_tool.Enable()
+            self.GetParent().GetParent().expression_input.Enable()
+            self.GetParent().GetParent().arrow_range.Enable()
+            self.GetParent().GetParent().arrow_range2.Enable()
+            self.GetParent().GetParent().src_range_label.Enable()
+            self.GetParent().GetParent().src_range_min.Enable()
+            self.GetParent().GetParent().src_range_max.Enable()
+            self.GetParent().GetParent().dest_range_label.Enable()
+            self.GetParent().GetParent().dest_range_min.Enable()
+            self.GetParent().GetParent().dest_range_max.Enable()
+
             src_min = connection_data["src_min"]
             src_max = connection_data["src_max"]
             dest_min = connection_data["dest_min"]
@@ -122,6 +148,9 @@ class MyTreeList(wx.Panel):
             self.GetParent().GetParent().src_range_max.SetValue(src_max)
             self.GetParent().GetParent().dest_range_min.SetValue(dest_min)
             self.GetParent().GetParent().dest_range_max.SetValue(dest_max)
+
+        #TODO: toggle mute if connections is muted
+
 
     def changed(self, evt):
         self.GetParent().GetParent().redraw()

@@ -32,6 +32,16 @@ class MyMapper():  #TODO: refactore this to heritage from mapper library
     def Disconnect(self, src, dest):
         self.mon.disconnect(src, dest)
 
+    def Unlink(self):
+        pass
+
+    def Link(self):
+        pass
+
+    def Modify(self, src, dest, options=None):
+        self.mon.modify_connection(src, dest, options)
+        self.mon.poll(100)
+
     def getConnectionBySignalFullNames(self, src, dest):
         self.mon.poll(20)
         return self.mon.db.get_connection_by_signal_full_names(src, dest)

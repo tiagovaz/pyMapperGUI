@@ -43,7 +43,7 @@ class MyFrame(wx.Frame):
         ## toolbar
         icons_folder = "icons/"
 
-        self.toolbar = self.CreateToolBar()
+        self.toolbar = self.CreateToolBar(wx.TB_FLAT)
         self.toolbar.SetToolBitmapSize((22, 22))  # sets icon size
 
         load_ico = wx.Bitmap(icons_folder + 'document-open.png')
@@ -75,34 +75,43 @@ class MyFrame(wx.Frame):
         # connections setup
         modes_list = ['Bypass', 'Linear', 'Calibration', 'Reverse', 'Expression']
         self.mode_choice = wx.Choice(self.toolbar, -1, (100, 50), choices=modes_list)
+        self.mode_choice.Disable()
         self.toolbar.AddControl(self.mode_choice)
         self.Bind(wx.EVT_CHOICE, self.EvtModeChoice, self.mode_choice)
 
         # expression for mapping
-        self.expression_y = wx.StaticText(self.toolbar, -1, " Expr ")
+        self.expression_y = wx.StaticText(self.toolbar, -1, " y = ")
         self.expression_input = wx.TextCtrl(self.toolbar, -1, "", size=(220, 26))
+        self.expression_y.Disable()
+        self.expression_input.Disable()
         self.toolbar.AddControl(self.expression_y)
         self.toolbar.AddControl(self.expression_input)
 
         # mute button
+        # TODO: add icon
         mute_ico = wx.Bitmap(icons_folder + 'audio-volume-muted-blocked-panel.png')
-        mute_tool = self.toolbar.AddCheckLabelTool(wx.ID_ANY, "Checkable", mute_ico, shortHelp="Mute connection")
-        self.Bind(wx.EVT_MENU, self.OnMute, mute_tool)
-
+        self.mute_tool = wx.ToggleButton(self.toolbar, -1, "Mute")
+        self.mute_tool.Disable()
+        self.Bind(wx.EVT_TOGGLEBUTTON, self.OnMute, self.mute_tool)
+        self.toolbar.AddControl(self.mute_tool)
 
         self.arrow_range = wx.StaticText(self.toolbar, -1, " - ")
+        self.arrow_range.Disable()
         self.arrow_range2 = wx.StaticText(self.toolbar, -1, " - ")
+        self.arrow_range2.Disable()
 
         # source / dest range input
-        #TODO: focus/unfocus min/max entries
         #TODO: set increment based on current value (cool!)
         self.toolbar.AddSeparator()
         self.src_range_label = wx.StaticText(self.toolbar, -1, " Src. range: ")
+        self.src_range_label.Disable()
         self.src_range_min = FS.FloatSpin(self.toolbar, -1, increment=0.01, agwStyle=FS.FS_CENTRE, size=(100, 23))
+        self.src_range_min.Disable()
         self.src_range_min.SetFormat("%f")
         self.src_range_min.SetDigits(2)
 
         self.src_range_max = FS.FloatSpin(self.toolbar, -1, increment=0.01, agwStyle=FS.FS_CENTRE, size=(100, 23))
+        self.src_range_max.Disable()
         self.src_range_max.SetFormat("%f")
         self.src_range_max.SetDigits(2)
 
@@ -115,11 +124,14 @@ class MyFrame(wx.Frame):
         self.toolbar.AddControl(self.src_range_max)
 
         self.dest_range_label = wx.StaticText(self.toolbar, -1, " Dest. range: ")
+        self.dest_range_label.Disable()
         self.dest_range_min = FS.FloatSpin(self.toolbar, -1, increment=0.01, agwStyle=FS.FS_CENTRE, size=(100, 23))
+        self.dest_range_min.Disable()
         self.dest_range_min.SetFormat("%f")
         self.dest_range_min.SetDigits(2)
 
         self.dest_range_max = FS.FloatSpin(self.toolbar, -1, increment=0.01, agwStyle=FS.FS_CENTRE, size=(100, 23))
+        self.dest_range_max.Disable()
         self.dest_range_max.SetFormat("%f")
         self.dest_range_max.SetDigits(2)
 
@@ -245,7 +257,10 @@ class MyFrame(wx.Frame):
         self.Show()
 
     def OnMute(self, event):
-        print "MUTE"
+        self.my_mapper.Modify(self.sources_panel.GetSignalAddress(),
+                               self.destinations_panel.GetSignalAddress(),
+                               options={'muted':True})
+        print self.mute_tool.GetValue()
 
     def EvtModeChoice(self, event):
         print event.GetString()
