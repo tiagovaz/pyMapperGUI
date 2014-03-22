@@ -41,7 +41,7 @@ class MyFrame(wx.Frame):
         conn_label.SetForegroundColour("grey")
 
         ## toolbar
-        icons_folder = "icons22x22/"
+        icons_folder = "icons/"
 
         self.toolbar = self.CreateToolBar()
         self.toolbar.SetToolBitmapSize((22, 22))  # sets icon size
@@ -58,13 +58,13 @@ class MyFrame(wx.Frame):
         self.toolbar.AddSeparator()
 
         ### connect
-        connect_ico = wx.Bitmap(icons_folder + 'node-join-segment.png')
+        connect_ico = wx.Bitmap(icons_folder + 'connect.png')
         connect_tool = self.toolbar.AddSimpleTool(wx.ID_ANY, connect_ico, "Connect",
                                                   "Connects selected source to selected destination.")
         self.Bind(wx.EVT_MENU, self.OnConnect, connect_tool)
 
         ### disconnect
-        disconnect_ico = wx.Bitmap(icons_folder + 'node-delete-segment.png')
+        disconnect_ico = wx.Bitmap(icons_folder + 'disconnect.png')
         disconnect_tool = self.toolbar.AddSimpleTool(wx.ID_ANY, disconnect_ico, "Disconnect",
                                                      "Disconnects selected source from selected destination.")
         self.Bind(wx.EVT_MENU, self.OnDisconnect, disconnect_tool)
@@ -83,29 +83,23 @@ class MyFrame(wx.Frame):
 
         self.toolbar.AddSeparator()
 
-        mute_ico = wx.ArtProvider.GetBitmap(wx.ART_REPORT_VIEW, wx.ART_TOOLBAR, (16, 16))
-        mute_tool = self.toolbar.AddCheckLabelTool(wx.ID_ANY, "Checkable", mute_ico, shortHelp="Mute")
-
-        bypass_ico = wx.ArtProvider.GetBitmap(wx.ART_LIST_VIEW, wx.ART_TOOLBAR, (16, 16))
-        bypass_tool = self.toolbar.AddCheckLabelTool(wx.ID_ANY, "Checkable", bypass_ico, shortHelp="Bypass")
-
-        linear_ico = wx.ArtProvider.GetBitmap(wx.ART_NEW_DIR, wx.ART_TOOLBAR, (16, 16))
-        linear_tool = self.toolbar.AddCheckLabelTool(wx.ID_ANY, "Checkable", linear_ico, shortHelp="Linear")
-
-        calib_ico = wx.ArtProvider.GetBitmap(wx.ART_GO_DIR_UP, wx.ART_TOOLBAR, (16, 16))
-        calib_tool = self.toolbar.AddCheckLabelTool(wx.ID_ANY, "Checkable", calib_ico, shortHelp="Calibrate")
-
-        rev_ico = wx.ArtProvider.GetBitmap(wx.ART_EXECUTABLE_FILE, wx.ART_TOOLBAR, (16, 16))
-        rev_tool = self.toolbar.AddCheckLabelTool(wx.ID_ANY, "Checkable", rev_ico, shortHelp="Reverse")
-
-        expr_ico = wx.ArtProvider.GetBitmap(wx.ART_NORMAL_FILE, wx.ART_TOOLBAR, (16, 16))
-        expr_tool = self.toolbar.AddCheckLabelTool(wx.ID_ANY, "Checkable", expr_ico, shortHelp="Expression")
+        # connections setup
+        modes_list = ['Bypass', 'Linear', 'Calibration', 'Reverse', 'Expression']
+        self.mode_choice = wx.Choice(self.toolbar, -1, (100, 50), choices=modes_list)
+        self.toolbar.AddControl(self.mode_choice)
+        self.Bind(wx.EVT_CHOICE, self.EvtModeChoice, self.mode_choice)
 
         # expression for mapping
         self.expression_y = wx.StaticText(self.toolbar, -1, " Expr ")
         self.expression_input = wx.TextCtrl(self.toolbar, -1, "", size=(220, 26))
         self.toolbar.AddControl(self.expression_y)
         self.toolbar.AddControl(self.expression_input)
+
+        # mute button
+        mute_ico = wx.Bitmap(icons_folder + 'audio-volume-muted-blocked-panel.png')
+        mute_tool = self.toolbar.AddCheckLabelTool(wx.ID_ANY, "Checkable", mute_ico, shortHelp="Mute connection")
+        self.Bind(wx.EVT_MENU, self.OnMute, mute_tool)
+
 
         self.arrow_range = wx.StaticText(self.toolbar, -1, " - ")
         self.arrow_range2 = wx.StaticText(self.toolbar, -1, " - ")
@@ -172,8 +166,8 @@ class MyFrame(wx.Frame):
         self.destinations_search = wx.SearchCtrl(self.main_panel, size=(240, -1), style=wx.TE_PROCESS_ENTER)
 
         ## expand/collapse controls
-        expand_icon = wx.ArtProvider.GetBitmap(wx.ART_UNDO, wx.ART_TOOLBAR, (16, 16))
-        collapse_icon = wx.ArtProvider.GetBitmap(wx.ART_UNDO, wx.ART_TOOLBAR, (16, 16))
+        expand_icon = wx.Bitmap(icons_folder + 'expand.png')
+        collapse_icon = wx.Bitmap(icons_folder + 'collapse.png')
 
         ### expand all src
         expand_src_button = wx.BitmapButton(self.main_panel, -1, expand_icon, (16, 16),
@@ -189,13 +183,13 @@ class MyFrame(wx.Frame):
 
         ### collapse all src
         collapse_src_button = wx.BitmapButton(self.main_panel, -1, collapse_icon, (16, 16),
-                                              (collapse_icon.GetWidth() + 5, collapse_icon.GetHeight() + 5))
+                                              (collapse_icon.GetWidth() + 5, collapse_icon.GetHeight() + 18))
         collapse_src_button.SetToolTipString("This is a bitmap button.")
         self.Bind(wx.EVT_BUTTON, self.sources_panel.OnCollapse, collapse_src_button)
 
         ### collapse all dest
         collapse_dest_button = wx.BitmapButton(self.main_panel, -1, collapse_icon, (16, 16),
-                                               (collapse_icon.GetWidth() + 5, collapse_icon.GetHeight() + 5))
+                                               (collapse_icon.GetWidth() + 5, collapse_icon.GetHeight() + 18))
         collapse_dest_button.SetToolTipString("This is a bitmap button.")
         self.Bind(wx.EVT_BUTTON, self.destinations_panel.OnCollapse, collapse_dest_button)
 
@@ -261,6 +255,12 @@ class MyFrame(wx.Frame):
 
         self.Show()
 
+    def OnMute(self, event):
+        print "MUTE"
+
+    def EvtModeChoice(self, event):
+        print event.GetString()
+
     def EvtTextSourceMin(self, event):
         print 'EvtText: %s\n' % event.GetString()
 
@@ -305,13 +305,13 @@ class MyFrame(wx.Frame):
         self.my_mapper.setLink("/" + self.sources_panel.GetSignalAddress().split("/")[1],
                                "/" + self.destinations_panel.GetSignalAddress().split("/")[1], {})
         self.my_mapper.Connect(self.sources_panel.GetSignalAddress(),
-                                        self.destinations_panel.GetSignalAddress(),
-                                        options={})
+                               self.destinations_panel.GetSignalAddress(),
+                               options={})
         self.connections_panel.DrawConnectionsLines()
 
     def OnDisconnect(self, event):  #TODO: unlink if last connection
         self.my_mapper.Disconnect(self.sources_panel.GetSignalAddress(),
-                                        self.destinations_panel.GetSignalAddress())
+                                  self.destinations_panel.GetSignalAddress())
         self.connections_panel.DrawConnectionsLines()
 
     def OnDisconnectAll(self, event):  #TODO: unlink if last connection (or keep it linked?)

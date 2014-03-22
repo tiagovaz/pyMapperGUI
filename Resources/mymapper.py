@@ -24,7 +24,7 @@ class MyMapper():  #TODO: refactore this to heritage from mapper library
 
     #TODO: use mapper callbacks for drawing lines after new connections or disconnections
     def Connect(self, src, dest, options=None): #TODO: make config file for default conn setup
-        if not options: options = dict(mode=mapper.MO_EXPRESSION, expression='y=x', src_min=1, bound_min=mapper.BA_WRAP,
+        if not options: options = dict(mode=mapper.MO_EXPRESSION, expression='y=x+0.0005', src_min=1, bound_min=mapper.BA_WRAP,
                                        bound_max=mapper.BA_CLAMP)
         self.mon.poll(20)
         self.mon.connect(src, dest, options)
