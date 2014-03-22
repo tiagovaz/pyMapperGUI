@@ -20,18 +20,11 @@ class MyMapper():  #TODO: refactore this to heritage from mapper library
     def poll(self, time):
         self.mon.poll(time)
 
+    def setNetworkInterface(self, iface):
+        mapper.admin(iface=iface)
+
     def setLink(self, source, dest, options={}):
         self.mon.link(source, dest, options)
-
-    def setSignalMin(self, signal, value):
-        """receives a signal address and set the new min value from 'value'"""
-        self.selectedSignal = self.getSignalObjectBySignalFullName(signal,
-                                                                   "output")  #TODO: add a 'selected src/dest signal' attr for this class
-        self.selectedSignal.set_max(value)
-
-    # remember: Ranges are stored independently for each connection!
-    def setSignalMax(self, signal, value):
-        signal.set_max(value)
 
     #TODO: use mapper callbacks for drawing lines after new connections or disconnections
     def Connect(self, src, dest, options=None): #TODO: make config file for default conn setup

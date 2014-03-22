@@ -111,7 +111,7 @@ class MyTreeList(wx.Panel):
             self.GetParent().GetParent().mute_tool.Disable()
             self.GetParent().GetParent().expression_input.Disable()
             self.GetParent().GetParent().expression_y.Disable()
-            self.GetParent().GetParent().set_expr_tool.Disable()
+#            self.GetParent().GetParent().set_expr_tool.Disable()
             self.GetParent().GetParent().arrow_range.Disable()
             self.GetParent().GetParent().arrow_range2.Disable()
             self.GetParent().GetParent().src_range_label.Disable()
@@ -134,11 +134,11 @@ class MyTreeList(wx.Panel):
             if connection_data["mode"] == self.my_mapper.mo_expression:
                 self.GetParent().GetParent().expression_input.Enable()
                 self.GetParent().GetParent().expression_y.Enable()
-                self.GetParent().GetParent().set_expr_tool.Enable()
+#                self.GetParent().GetParent().set_expr_tool.Enable()
             else:
                 self.GetParent().GetParent().expression_input.Disable()
                 self.GetParent().GetParent().expression_y.Disable()
-                self.GetParent().GetParent().set_expr_tool.Disable()
+ #               self.GetParent().GetParent().set_expr_tool.Disable()
 
             self.GetParent().GetParent().arrow_range.Enable()
             self.GetParent().GetParent().arrow_range2.Enable()

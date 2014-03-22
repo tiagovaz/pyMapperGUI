@@ -1,15 +1,13 @@
 import wx
+import netifaces
 from wx.lib.mixins.inspection import InspectionMixin
 from Resources.mymapper import MyMapper
-
 # float spin for setting min/max values:
 try:
     from agw import floatspin as FS
 except ImportError:  # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.floatspin as FS
-
 from Resources.panels import *
-
 
 class MyFrame(wx.Frame):
     def __init__(self, parent, title, size):
@@ -18,6 +16,9 @@ class MyFrame(wx.Frame):
         # mapper object
         self.my_mapper = mymapper.MyMapper()
         self.modes_list = self.my_mapper.modes_dict.keys()
+
+        # network interfaces
+        self.ifaces = netifaces.interfaces()
 
         ############### widgets & bindings ########################################3
 
@@ -77,30 +78,26 @@ class MyFrame(wx.Frame):
 
         # connections setup
         self.mode_choice = wx.Choice(self.toolbar, -1, (100, 50), choices=self.modes_list)
+        self.mode_choice.SetToolTipString('Set the connection mode')
         self.mode_choice.Disable()
         self.toolbar.AddControl(self.mode_choice)
         self.Bind(wx.EVT_CHOICE, self.OnSetMode, self.mode_choice)
 
         # expression for mapping
         self.expression_y = wx.StaticText(self.toolbar, -1, " y = ")
-        self.expression_input = wx.TextCtrl(self.toolbar, -1, "", size=(220, 26))
+        self.expression_input = wx.TextCtrl(self.toolbar, -1, "",  style=wx.TE_PROCESS_ENTER, size=(220, 26))
+        self.expression_input.SetToolTipString('Type ENTER after writing your new expression')
+        self.Bind(wx.EVT_TEXT_ENTER, self.OnSetExpr, self.expression_input)
         self.expression_y.Disable()
         self.expression_input.Disable()
         self.toolbar.AddControl(self.expression_y)
         self.toolbar.AddControl(self.expression_input)
 
-        # set expression button
-        # TODO: add set expr icon
-        # expr_ico = wx.Bitmap(icons_folder + 'audio-volume-muted-blocked-panel.png')
-        self.set_expr_tool = wx.Button(self.toolbar, -1, "Set", size=(40, 26))
-        self.set_expr_tool.Disable()
-        self.Bind(wx.EVT_BUTTON, self.OnSetExpr, self.set_expr_tool)
-        self.toolbar.AddControl(self.set_expr_tool)
-
         # mute button
         # TODO: add mute icon
         # mute_ico = wx.Bitmap(icons_folder + 'audio-volume-muted-blocked-panel.png')
         self.mute_tool = wx.ToggleButton(self.toolbar, -1, "Mute", size=(50, 26))
+        self.mute_tool.SetToolTipString('Mute/Unmute a connection')
         self.mute_tool.Disable()
         self.Bind(wx.EVT_TOGGLEBUTTON, self.OnMute, self.mute_tool)
         self.toolbar.AddControl(self.mute_tool)
@@ -159,18 +156,26 @@ class MyFrame(wx.Frame):
         ## menubar #TODO: rename menus
         menu_bar = wx.MenuBar()
         menu1 = wx.Menu()
-        menu_item = menu1.Append(-1, "&Quit")
+        menu1.Append(102, "&Close", "Close application")
         menu_bar.Append(menu1, "&File")
-        self.SetMenuBar(menu_bar)
-        self.Bind(wx.EVT_MENU, self.OnQuit, menu_item)
 
         menu2 = wx.Menu()
-        menu2.Append(wx.NewId(), "&Preferences...", "Set Preferences")
-        menu_bar.Append(menu2, "&Edit")
+        submenu_ifaces = wx.Menu()
+        submenu_idx = 2011
+        for i in self.ifaces:
+            print i
+            submenu_ifaces.Append(submenu_idx, i, "", wx.ITEM_RADIO)
+            submenu_idx += 1
+        menu2.AppendMenu(201, "Network interfaces", submenu_ifaces)
+        menu_bar.Append(menu2, "&Options")
 
         menu3 = wx.Menu()
-        menu3.Append(wx.NewId(), "&About", "About")
+        menu3.Append(301, "&Docs", "Documentation")
+        menu3.Append(302, "&About", "About")
         menu_bar.Append(menu3, "&Help")
+
+        self.SetMenuBar(menu_bar)
+        self.Bind(wx.EVT_MENU, self.OnQuit, id=102)
 
         ## source/destination search
         self.sources_search = wx.SearchCtrl(self.main_panel, size=(240, -1), style=wx.TE_PROCESS_ENTER)
@@ -288,11 +293,11 @@ class MyFrame(wx.Frame):
         if mode_mapper_index == self.my_mapper.mo_expression:
             self.expression_input.Enable()
             self.expression_y.Enable()
-            self.set_expr_tool.Enable()
+#            self.set_expr_tool.Enable()
         else:
             self.expression_input.Disable()
             self.expression_y.Disable()
-            self.set_expr_tool.Disable()
+#            self.set_expr_tool.Disable()
         # update expression after changing mode
         #TODO: do not use a mapper instance here and another in panels...
         connection_data = self.my_mapper.getConnectionBySignalFullNames(self.sources_panel.GetSignalAddress(),
@@ -323,10 +328,6 @@ class MyFrame(wx.Frame):
         self.my_mapper.Modify(self.sources_panel.GetSignalAddress(),
                               self.destinations_panel.GetSignalAddress(),
                               options={'dest_max': f})
-
-    def EvtTextEnter(self, event):
-        print 'EvtTextEnter\n'
-        event.Skip()
 
     def RefreshAll(self):
         self.sources_panel.RefreshAll()
