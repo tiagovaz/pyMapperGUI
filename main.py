@@ -257,10 +257,13 @@ class MyFrame(wx.Frame):
         self.Show()
 
     def OnMute(self, event):
+        if self.mute_tool.GetValue() is True:
+            is_muted = True
+        else:
+            is_muted = False
         self.my_mapper.Modify(self.sources_panel.GetSignalAddress(),
                                self.destinations_panel.GetSignalAddress(),
-                               options={'muted':True})
-        print self.mute_tool.GetValue()
+                               options={'muted':is_muted})
 
     def EvtModeChoice(self, event):
         print event.GetString()

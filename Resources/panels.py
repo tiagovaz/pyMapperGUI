@@ -120,6 +120,7 @@ class MyTreeList(wx.Panel):
             self.GetParent().GetParent().dest_range_min.Disable()
             self.GetParent().GetParent().dest_range_max.Disable()
 
+            # set default values in the control panel
             self.GetParent().GetParent().expression_input.Clear()
             self.GetParent().GetParent().src_range_min.SetToDefaultValue()
             self.GetParent().GetParent().src_range_max.SetToDefaultValue()
@@ -130,6 +131,7 @@ class MyTreeList(wx.Panel):
             self.GetParent().GetParent().mode_choice.Enable()
             self.GetParent().GetParent().mute_tool.Enable()
             self.GetParent().GetParent().expression_input.Enable()
+            self.GetParent().GetParent().expression_y.Enable()
             self.GetParent().GetParent().arrow_range.Enable()
             self.GetParent().GetParent().arrow_range2.Enable()
             self.GetParent().GetParent().src_range_label.Enable()
@@ -139,11 +141,16 @@ class MyTreeList(wx.Panel):
             self.GetParent().GetParent().dest_range_min.Enable()
             self.GetParent().GetParent().dest_range_max.Enable()
 
+            # set connection values in the control panel
             src_min = connection_data["src_min"]
             src_max = connection_data["src_max"]
             dest_min = connection_data["dest_min"]
             dest_max = connection_data["dest_max"]
-            self.GetParent().GetParent().expression_input.SetValue(connection_data["expression"])
+            if connection_data["muted"] == 1:
+                self.GetParent().GetParent().mute_tool.SetValue(True)
+            elif connection_data["muted"] == 0:
+                self.GetParent().GetParent().mute_tool.SetValue(False)
+            self.GetParent().GetParent().expression_input.SetValue(connection_data["expression"].split('=')[1])
             self.GetParent().GetParent().src_range_min.SetValue(src_min)
             self.GetParent().GetParent().src_range_max.SetValue(src_max)
             self.GetParent().GetParent().dest_range_min.SetValue(dest_min)
