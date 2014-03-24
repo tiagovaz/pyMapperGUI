@@ -3,4 +3,4 @@ pymapper
 
 Cross-platform gui for libmapper
 
-.. image:: pymapper.png
+[![pymapper](http://acaia.ca/~tiago/images/pymapper.png "pymapper")](https://github.com/tiagovaz/pymapper)
