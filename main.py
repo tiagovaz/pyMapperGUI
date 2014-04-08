@@ -9,6 +9,10 @@ except ImportError:  # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.floatspin as FS
 from Resources.panels import *
 
+# TODO:
+# - expressions preset
+# -
+
 class MyFrame(wx.Frame):
     def __init__(self, parent, title, size):
         wx.Frame.__init__(self, parent, -1, title=title, size=size)

@@ -63,7 +63,7 @@ class MyTreeList(wx.Panel):
                                            | wx.TR_FULL_ROW_HIGHLIGHT
                                            | wx.TR_HAS_BUTTONS + wx.TR_HIDE_ROOT,
                                            size=(530, 600))
-
+        # TODO: dynamic adjustment (?) - see available methods
         self.tree.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OnActivate, self.tree)
         self.tree.Bind(wx.EVT_TREE_ITEM_EXPANDED, self.changed, self.tree)
         self.tree.Bind(wx.EVT_TREE_ITEM_COLLAPSED, self.changed, self.tree)
