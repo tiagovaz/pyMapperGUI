@@ -16,7 +16,7 @@ class MyFrame(wx.Frame):
 
         #TODO: generate list of outputs and get their 'real' names to create the labels - duhhh
         for i in range(10): # generating lables & slides list
-            self.slider = MyControlSlider(self, -60, 18, 0, pos=(45, pos_y), backColour=colour, signal_id=signal_id)
+            self.slider = MyControlSlider(self, -1000, 1000, 0, pos=(45, pos_y), backColour=colour, signal_id=signal_id)
             sizer.Add(wx.StaticText(self, -1, str(s_label)+".", pos =(20, pos_y)), 0, wx.ALIGN_CENTRE|wx.ALL, 5)
             s_label += 1
             pos_y += 25

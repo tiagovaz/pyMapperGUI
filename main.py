@@ -10,8 +10,11 @@ except ImportError:  # if it's not there locally, try the wxPython lib.
 from Resources.panels import *
 
 # TODO:
-# - expressions preset
-# -
+# - explore expressions and create preset
+# - possible connection to Zyne synth ?
+# - select network interface (new_admin() doesn't exist !?)
+# - selected connection info (right click, but which panel?)
+# - selected signal info + edit
 
 class MyFrame(wx.Frame):
     def __init__(self, parent, title, size):
@@ -89,7 +92,16 @@ class MyFrame(wx.Frame):
 
         # expression for mapping
         self.expression_y = wx.StaticText(self.toolbar, -1, " y = ")
-        self.expression_input = wx.TextCtrl(self.toolbar, -1, "",  style=wx.TE_PROCESS_ENTER, size=(220, 26))
+        #self.expression_input = wx.TextCtrl(self.toolbar, -1, "",  style=wx.TE_PROCESS_ENTER, size=(220, 26))
+        self.expr_list = ['x - x{-1}', 'x + y{-1}', 'x * 0.01 + y{-1} * 0.99', 'y{-1} + 1']
+        # FIXME:
+        #       - set values from a config file
+        #       - save last expressions
+        #       - consider min/max values
+
+        self.expression_input = wx.ComboBox(self.toolbar, -1, "", size=(220, 26),
+                                            choices=self.expr_list, style=wx.CB_DROPDOWN | wx.TE_PROCESS_ENTER)
+
         self.expression_input.SetToolTipString('Type ENTER after writing your new expression')
         self.Bind(wx.EVT_TEXT_ENTER, self.OnSetExpr, self.expression_input)
         self.expression_y.Disable()
@@ -169,6 +181,7 @@ class MyFrame(wx.Frame):
         for i in self.ifaces:
             print i
             submenu_ifaces.Append(submenu_idx, i, "", wx.ITEM_RADIO)
+            self.Bind(wx.EVT_MENU, self.OnIfaceMenu, id=submenu_idx)
             submenu_idx += 1
         menu2.AppendMenu(201, "Network interfaces", submenu_ifaces)
         menu_bar.Append(menu2, "&Options")
@@ -297,11 +310,11 @@ class MyFrame(wx.Frame):
         if mode_mapper_index == self.my_mapper.mo_expression:
             self.expression_input.Enable()
             self.expression_y.Enable()
-#            self.set_expr_tool.Enable()
+        #            self.set_expr_tool.Enable()
         else:
             self.expression_input.Disable()
             self.expression_y.Disable()
-#            self.set_expr_tool.Disable()
+        #            self.set_expr_tool.Disable()
         # update expression after changing mode
         #TODO: do not use a mapper instance here and another in panels...
         connection_data = self.my_mapper.getConnectionBySignalFullNames(self.sources_panel.GetSignalAddress(),
@@ -386,6 +399,11 @@ class MyFrame(wx.Frame):
     def OnCollapseAll(self, event):  #FIXME: for some reason it doesnt work :\
         self.sources_panel.CollapseAll()
         self.destinations_panel.CollapseAll()
+
+    def OnIfaceMenu(self, event):
+        e = event.GetEventObject()
+        i = event.GetId()
+        self.my_mapper.setNetworkInterface(iface=str(e.GetLabel(i)))
 
     def OnQuit(self, event):
         self.Close(True)

@@ -21,7 +21,7 @@ class MyMapper():  #TODO: refactore this to heritage from mapper library
         self.mon.poll(time)
 
     def setNetworkInterface(self, iface):
-        mapper.admin(iface=iface)
+        mapper.admin(iface=iface) # TODO: it should be a 'new_admin()'
 
     def setLink(self, source, dest, options={}):
         self.mon.link(source, dest, options)
