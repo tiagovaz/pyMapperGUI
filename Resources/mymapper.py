@@ -3,9 +3,7 @@ import mapper
 class MyMapper():  #TODO: refactore this to heritage from mapper library
     def __init__(self):
         self.mon = mapper.monitor()
-        self.mon.request_devices()
-        self.mon.request_links_by_src_device_name("/*")
-
+        self.initMonitor()
         self.mo_calibrate = mapper.MO_CALIBRATE
         self.mo_expression = mapper.MO_EXPRESSION
         self.mo_reverse = mapper.MO_REVERSE
@@ -17,11 +15,19 @@ class MyMapper():  #TODO: refactore this to heritage from mapper library
         # we often need to fetch reversed info from the dictionay above:
         self.modes_dict_rev = dict((v,k) for k, v in self.modes_dict.iteritems())
 
+    def initMonitor(self):
+        # TODO: assign callbacks
+        self.mon.request_devices()
+        self.mon.request_links_by_src_device_name("/*")
+
     def poll(self, time):
         self.mon.poll(time)
 
     def setNetworkInterface(self, iface):
-        mapper.admin(iface=iface) # TODO: it should be a 'new_admin()'
+        print iface
+        self.admin = mapper.admin(iface=iface)
+        self.mon = mapper.monitor(self.admin, autorequest=0)
+        self.initMonitor()
 
     def setLink(self, source, dest, options={}):
         self.mon.link(source, dest, options)

@@ -10,7 +10,7 @@ except ImportError:  # if it's not there locally, try the wxPython lib.
 from Resources.panels import *
 
 # TODO:
-# - explore expressions and create preset
+# - explore expressions and create preset (filtres...)
 # - possible connection to Zyne synth ?
 # - select network interface (new_admin() doesn't exist !?)
 # - selected connection info (right click, but which panel?)
@@ -97,10 +97,11 @@ class MyFrame(wx.Frame):
         # FIXME:
         #       - set values from a config file
         #       - save last expressions
-        #       - consider min/max values
+        #       - consider min/max values (cache pour l'usageur!)
 
         self.expression_input = wx.ComboBox(self.toolbar, -1, "", size=(220, 26),
                                             choices=self.expr_list, style=wx.CB_DROPDOWN | wx.TE_PROCESS_ENTER)
+        self.expression_input.Append("foo", "This is some client data for this item")
 
         self.expression_input.SetToolTipString('Type ENTER after writing your new expression')
         self.Bind(wx.EVT_TEXT_ENTER, self.OnSetExpr, self.expression_input)
@@ -403,7 +404,7 @@ class MyFrame(wx.Frame):
     def OnIfaceMenu(self, event):
         e = event.GetEventObject()
         i = event.GetId()
-        self.my_mapper.setNetworkInterface(iface=str(e.GetLabel(i)))
+        self.my_mapper.setNetworkInterface(iface=str(e.GetLabel(i))) #FIXME: doesn't refresh properly
 
     def OnQuit(self, event):
         self.Close(True)
