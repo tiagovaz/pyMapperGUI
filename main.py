@@ -190,7 +190,11 @@ class MyFrame(wx.Frame):
         menu3 = wx.Menu()
         menu3.Append(301, "&Docs", "Documentation")
         menu3.Append(302, "&About", "About")
-        menu_bar.Append(menu3, "&Help")
+        menu_bar.Append(menu3, "&Help",)
+
+        self.Bind(wx.EVT_MENU, self.OnAboutBox, id=302)
+
+
 
         self.SetMenuBar(menu_bar)
         self.Bind(wx.EVT_MENU, self.OnQuit, id=102)
@@ -346,6 +350,39 @@ class MyFrame(wx.Frame):
         self.my_mapper.Modify(self.sources_panel.GetSignalAddress(),
                               self.destinations_panel.GetSignalAddress(),
                               options={'dest_max': f})
+
+    def OnAboutBox(self, e):
+
+        description = """PyMapper is a cross-platform GUI for libmapper (http://libmapper.github.io/)"""
+
+        licence = """PyMapper is free software; you can redistribute
+it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 3 of the License,
+or (at your option) any later version.
+
+PyMapper is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU General Public License for more details. You should have
+received a copy of the GNU General Public License along with PyMapper;
+if not, write to the Free Software Foundation, Inc., 59 Temple Place,
+Suite 330, Boston, MA  02111-1307  USA"""
+
+        info = wx.AboutDialogInfo()
+
+   #     info.SetIcon(wx.Icon('pymapper.png', wx.BITMAP_TYPE_PNG))
+        info.SetName('PyMapper')
+        info.SetVersion('1.0beta1')
+        info.SetDescription(description)
+        info.SetCopyright('(C) 2014 Tiago Bortoletto Vaz <tiago@debian.org>')
+        info.SetWebSite('https://github.com/tiagovaz/pymapper')
+        info.SetLicence(licence)
+        #info.AddDeveloper('Tiago Bortoletto Vaz')
+        #info.AddDocWriter('')
+        #info.AddArtist('')
+        #info.AddTranslator('')
+
+        wx.AboutBox(info)
 
     def RefreshAll(self):
         self.sources_panel.RefreshAll()
