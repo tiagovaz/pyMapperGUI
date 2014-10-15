@@ -16,9 +16,13 @@ def freq_handler(sig, id, val, timetag):
         print 'exception'
         print sig, val
 
+def setup(d):
+    dev_input = dev.add_input( "/Q", 1, "i", None, 1, 500, lambda s, i, f, t: b.setQ(f) )
+    dev_input = dev.add_input( "/pitch", 1, "i", None, 20, 15000, freq_handler )
+
 dev = mapper.device("biquad")
-dev_input = dev.add_input( "/Q", 1, "i", None, 1, 500, lambda s, i, f, t: b.setQ(f) )
-dev_input = dev.add_input( "/pitch", 1, "i", None, 20, 15000, freq_handler )
+setup(dev)
+
 
 while 1:
     dev.poll(10)

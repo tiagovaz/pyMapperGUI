@@ -2,7 +2,7 @@ import mapper
 
 class MyMapper():  #TODO: refactore this to heritage from mapper library
     def __init__(self):
-        self.mon = mapper.monitor()
+        self.mon = mapper.monitor(autosubscribe_flags=mapper.SUB_DEVICE)
         self.initMonitor()
         self.mo_calibrate = mapper.MO_CALIBRATE
         self.mo_expression = mapper.MO_EXPRESSION
@@ -19,7 +19,6 @@ class MyMapper():  #TODO: refactore this to heritage from mapper library
     def initMonitor(self):
         # TODO: assign callbacks
         self.mon.request_devices()
-        self.mon.request_links_by_src_device_name("/*")
 
     def poll(self, time):
         self.mon.poll(time)
