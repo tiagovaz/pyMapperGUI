@@ -1,3 +1,5 @@
+import wxversion
+wxversion.select("2.8")
 import wx
 import netifaces
 from wx.lib.mixins.inspection import InspectionMixin
@@ -8,13 +10,28 @@ try:
 except ImportError:  # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.floatspin as FS
 from Resources.panels import *
+from Resources.dialogs import *
 
 # TODO:
-# - explore expressions and create preset (filtres...)
-# - possible connection to Zyne synth ?
+#### - explore expressions and create preset (filtres...)
+# - possible connection to Zyne synth ? (may have a 'create mapper device' option in Zyne)
 # - select network interface (new_admin() doesn't exist !?)
 # - selected connection info (right click, but which panel?)
 # - selected signal info + edit
+### - add pure OSC support
+#### - build on Mac
+#### - build on Win
+##### - save/load state files
+# - push it to Debian!
+# - update to new mapper API
+#### - update to wxpython3
+# - add a sort of realtime visualization from input/output data (une line simple comme option dans une column)
+
+# FIXME:
+# - network interface selection
+# - auto-refresh should list new found devices
+# - calibrate feature is broken-ish
+# - device creation doesn't work
 
 class MyFrame(wx.Frame):
     def __init__(self, parent, title, size):
@@ -185,7 +202,10 @@ class MyFrame(wx.Frame):
             self.Bind(wx.EVT_MENU, self.OnIfaceMenu, id=submenu_idx)
             submenu_idx += 1
         menu2.AppendMenu(201, "Network interfaces", submenu_ifaces)
+        menu2.Append(202, "Add OSC device", "Add OSC device")
         menu_bar.Append(menu2, "&Options")
+
+        self.Bind(wx.EVT_MENU, self.OnAddOSCDevice, id=202)
 
         menu3 = wx.Menu()
         menu3.Append(301, "&Docs", "Documentation")
@@ -384,12 +404,30 @@ Suite 330, Boston, MA  02111-1307  USA"""
 
         wx.AboutBox(info)
 
+    def OnAddOSCDevice(self, evt):
+        dlg = AddOSCDevice(self, -1, "Sample Dialog", size=(350, 200),
+                         #style=wx.CAPTION | wx.SYSTEM_MENU | wx.THICK_FRAME,
+                         style=wx.DEFAULT_DIALOG_STYLE, # & ~wx.CLOSE_BOX,
+                         useMetal=False,
+                         )
+        dlg.CenterOnScreen()
+
+        # this does not return until the dialog is closed.
+        val = dlg.ShowModal()
+
+        if val == wx.ID_OK:
+            self.t = self.my_mapper.createDevice("test")
+            print self.t
+
+        dlg.Destroy()
+
     def RefreshAll(self):
         self.sources_panel.RefreshAll()
         self.destinations_panel.RefreshAll()
         self.sources_panel.ExpandAll()  #TODO: do not repeat code
         self.destinations_panel.ExpandAll()
 
+    # try to call inside a Timer
     def redraw(self):
         wx.CallAfter(self.connections_panel.Refresh)
 

@@ -14,6 +14,7 @@ class MyMapper():  #TODO: refactore this to heritage from mapper library
                            'Linear': mapper.MO_LINEAR, 'Expression': mapper.MO_EXPRESSION}
         # we often need to fetch reversed info from the dictionay above:
         self.modes_dict_rev = dict((v,k) for k, v in self.modes_dict.iteritems())
+        self.OSC_devices = []
 
     def initMonitor(self):
         # TODO: assign callbacks
@@ -24,7 +25,6 @@ class MyMapper():  #TODO: refactore this to heritage from mapper library
         self.mon.poll(time)
 
     def setNetworkInterface(self, iface):
-        print iface
         self.admin = mapper.admin(iface=iface)
         self.mon = mapper.monitor(self.admin, autorequest=0)
         self.initMonitor()
@@ -50,7 +50,6 @@ class MyMapper():  #TODO: refactore this to heritage from mapper library
 
     def Modify(self, src, dest, options=None):
         self.mon.modify_connection(src, dest, options)
-        print src, dest, options
         self.mon.poll(5)
 
     def getConnectionBySignalFullNames(self, src, dest):
@@ -84,6 +83,13 @@ class MyMapper():  #TODO: refactore this to heritage from mapper library
         self.getAllDevices()
         outputs_list = [i for i in self.mon.db.outputs_by_device_name(device_name)]
         return outputs_list
+
+    def createDevice(self, device_name):
+        self.OSC_dev = mapper.device(device_name)
+        self.OSC_dev.add_output("/x", 1, 'f', None, -1000, 1000)
+        self.OSC_dev.poll(100)
+        self.OSC_devices.append(self.OSC_dev)
+        return self.OSC_dev
 
 # petit debug
 if __name__ == "__main__":

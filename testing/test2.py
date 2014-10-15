@@ -1,5 +1,7 @@
 from pyo import *
 import mapper
+from random import uniform
+
 
 s = Server(audio='jack').boot()
 s.start()
@@ -16,7 +18,7 @@ def freq_handler(sig, id, val, timetag):
 
 dev = mapper.device("biquad")
 dev_input = dev.add_input( "/Q", 1, "i", None, 1, 500, lambda s, i, f, t: b.setQ(f) )
-dev_input = dev.add_input( "/pitch1", 1, "i", None, 20, 15000, freq_handler )
+dev_input = dev.add_input( "/pitch", 1, "i", None, 20, 15000, freq_handler )
 
 while 1:
-    dev.poll(0)
+    dev.poll(10)
