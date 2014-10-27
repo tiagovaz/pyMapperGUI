@@ -41,7 +41,7 @@ class MyControlSlider(ControlSlider):
         self.signal_id = signal_id
         self.mon = mapper.monitor()
         self.dev = self.GetParent().dev
-        self.output = self.dev.add_output("/signal/"+str(self.signal_id), 1, 'f', None, -1000, 1000)
+        self.output = self.dev.add_output("/"+str(self.signal_id), 1, 'f', None, -1000, 1000)
 
         while not self.dev.ready():
             self.dev.poll(10)

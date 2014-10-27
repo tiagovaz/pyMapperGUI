@@ -31,7 +31,6 @@ class MyMapper():  #TODO: refactore this to heritage from mapper library
     def setLink(self, source, dest, options={}):
         self.mon.link(source, dest, options)
 
-    #TODO: use mapper callbacks for drawing lines after new connections or disconnections
     def Connect(self, src, dest, options=None): #TODO: make config file for default conn setup
         if not options: options = dict(mode=mapper.MO_LINEAR, bound_min=mapper.BA_WRAP,
                                        bound_max=mapper.BA_CLAMP)
@@ -46,6 +45,20 @@ class MyMapper():  #TODO: refactore this to heritage from mapper library
 
     def Unlink(self):
         pass
+
+    def getInputOutputDevices(self):
+        "This is needed by storage code. Should return {sources: [/dev1, /dev2, /etc], destinations:[/dev3, /dev1]}"
+        sources = []
+        destinations = []
+        devices = self.getAllDevices()
+        for d in devices:
+            if len(self.getInputsFromDevice(d)) != 0: # if device contains at least one input
+                destinations.append(d)
+            if len(self.getOutputsFromDevice(d)) != 0: # if device contains at least one output
+                sources.append(d)
+        in_out_devices = {'sources': sources, 'destinations': destinations}
+        print in_out_devices
+        return in_out_devices
 
     def Modify(self, src, dest, options=None):
         self.mon.modify_connection(src, dest, options)

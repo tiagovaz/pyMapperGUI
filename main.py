@@ -11,9 +11,13 @@ except ImportError:  # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.floatspin as FS
 from Resources.panels import *
 from Resources.dialogs import *
+from Resources.storage import *
+import os
 
 # TODO:
 #### - explore expressions and create preset (filtres...)
+# - documentation
+# - supports more than one level hierarchy for signals (ex. /dev1/signal/x)
 # - possible connection to Zyne synth ? (may have a 'create mapper device' option in Zyne)
 # - select network interface (new_admin() doesn't exist !?)
 # - selected connection info (right click, but which panel?)
@@ -21,11 +25,15 @@ from Resources.dialogs import *
 ### - add pure OSC support
 #### - build on Mac
 #### - build on Win
-##### - save/load state files
-# - push it to Debian!
-# - update to new mapper API
+#### - add save as / save current
+#### - add menu options for saving/loading
+### - push it to Debian!
 #### - update to wxpython3
 # - add a sort of realtime visualization from input/output data (une line simple comme option dans une column)
+
+# DONE:
+##### - save/load state files - OK!!!
+# - update to new mapper API - OK!
 
 # FIXME:
 # - network interface selection
@@ -40,6 +48,9 @@ class MyFrame(wx.Frame):
         # mapper object
         self.my_mapper = mymapper.MyMapper()
         self.modes_list = self.my_mapper.modes_dict.keys()
+
+        # storage object
+        self.mapper_storage = Storage()
 
         # network interfaces
         self.ifaces = netifaces.interfaces()
@@ -197,7 +208,6 @@ class MyFrame(wx.Frame):
         submenu_ifaces = wx.Menu()
         submenu_idx = 2011
         for i in self.ifaces:
-            print i
             submenu_ifaces.Append(submenu_idx, i, "", wx.ITEM_RADIO)
             self.Bind(wx.EVT_MENU, self.OnIfaceMenu, id=submenu_idx)
             submenu_idx += 1
@@ -321,7 +331,6 @@ class MyFrame(wx.Frame):
 
     def OnSetExpr(self, event):
         expression = 'y=' + self.expression_input.GetValue()
-        print expression
         self.my_mapper.Modify(self.sources_panel.GetSignalAddress(),
                               self.destinations_panel.GetSignalAddress(),
                               options={'expression': str(expression)})
@@ -415,34 +424,60 @@ Suite 330, Boston, MA  02111-1307  USA"""
         # this does not return until the dialog is closed.
         val = dlg.ShowModal()
 
+        #FIXME: broken
         if val == wx.ID_OK:
             self.t = self.my_mapper.createDevice("test")
-            print self.t
 
         dlg.Destroy()
 
     def RefreshAll(self):
-        self.sources_panel.RefreshAll()
-        self.destinations_panel.RefreshAll()
-        self.sources_panel.ExpandAll()  #TODO: do not repeat code
-        self.destinations_panel.ExpandAll()
+        wx.CallAfter(self.sources_panel.RefreshAll)
+        wx.CallAfter(self.destinations_panel.RefreshAll)
+        wx.CallAfter(self.sources_panel.ExpandAll)
+        wx.CallAfter(self.destinations_panel.ExpandAll)
+        self.redraw()
 
+    # redraw the connections
     # try to call inside a Timer
     def redraw(self):
         wx.CallAfter(self.connections_panel.Refresh)
 
     def OnTimer(self, event):
-        #self.connections_panel.DrawConnectionsLines()
         statusbar_text = str(len(self.my_mapper.getConnections())) + " connection(s)"
         self.statusbar.SetStatusText(statusbar_text)
         self.my_mapper.poll(50)
-        #self.RefreshAll()
 
     def OnSave(self, event):
-        pass
+        wildcard = "PyMapper file (.pym)|*.pym"
+        dlg = wx.FileDialog(self, "Save file as...", os.path.expanduser("~"), "connections.pym",
+                            wildcard=wildcard, style=wx.FD_SAVE)
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()
+            self.currentFile = path
+            self.SetTitle("pyMapper - %s" % path)
+            f = open(path, "w")
+            f.write(str(self.mapper_storage.serialise(self.my_mapper.mon, self.my_mapper.getAllDevices())))
+            f.close()
+        dlg.Destroy()
+
 
     def OnLoad(self, event):
-        pass
+        wildcard = "pyMapper file (.pym)|*.pym"
+        dlg = wx.FileDialog(self, "Open pyMapper file...", os.path.expanduser("~"), 
+                            wildcard=wildcard, style=wx.FD_OPEN)
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()
+            if path == "":
+                return
+            self.currentFile = path
+            self.SetTitle("pyMapper - %s" % os.path.split(path)[1])
+            f = open(path, "r")
+            text = f.read()
+            f.close()
+            devices_list = self.my_mapper.getInputOutputDevices()
+            #TODO: update menu (mute, min, max, expression etc) when loading new file
+            self.mapper_storage.deserialise(self.my_mapper.mon, text, devices_list)
+        dlg.Destroy()
 
     def OnDelete(self, event):
         pass

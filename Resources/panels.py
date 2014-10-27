@@ -70,6 +70,8 @@ class MyTreeList(wx.Panel):
         self.tree.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnItemChanged, self.tree)
         self.Bind(wx.EVT_SIZE, self.OnSize)
 
+        self.devices_list = []
+
         ### expand all
         expand_icon = wx.ArtProvider.GetBitmap(wx.ART_UNDO, wx.ART_TOOLBAR, (16,16))
         expand_button = wx.BitmapButton(self, -1, expand_icon, (20, 20), (expand_icon.GetWidth()+10, expand_icon.GetHeight()+10))
@@ -174,6 +176,10 @@ class MyTreeList(wx.Panel):
     def changed(self, event):
         self.GetParent().GetParent().redraw()
 
+    def getAllItems(self):
+        pass
+#        print self.tree.GetItemText(self.root)
+
     def getItemPos(self, item):
         while not self.tree.IsVisible(item): # cool!
             item = self.tree.GetItemParent(item)
@@ -203,7 +209,6 @@ class MyTreeList(wx.Panel):
     #TODO: put some brain here
     def AddTreeNodes(self, parentItem, items):
         for item in items:
-            print item
             bg_color = 0
             if self.which == "destinations" and self.my_mapper.getInputsFromDevice(item):
                 newItem = self.tree.AppendItem(parentItem, item)
@@ -235,16 +240,34 @@ class MyTreeList(wx.Panel):
                     self.tree.SetItemText(s_output, str(o["min"]), 4)
                     self.tree.SetItemText(s_output, str(o["max"]), 5)
 
+
+
     def RefreshAll(self):
         # Add nodes (devices and their signals) to the trees
         # keep last devices list, compare with current and update if changed
         # same for removing item (DO NOT REBUILD ALL TREE)
-        # UPDATE: consider using mapper callbacks
         self.tree.DeleteAllItems()
-        self.root = self.tree.AddRoot("") # hidden root
-        self.devices = self.my_mapper.getAllDevices()
-        self.AddTreeNodes(self.root, self.devices)
+        # Hidden tree root node
+        self.root = self.tree.AddRoot("")
+        self.new_devices_list = []
+        self.new_devices = self.my_mapper.getAllDevices()
+        self.getAllItems()
+#        for d in self.devices_list:
+#            if d not in self.new_devices: # if a device disappeared
+#                self.tree.Delete(self.GetItemByLabel(d, self.root)) # delete it from the tree
+#        for d in self.new_devices:
+#            if d not in self.devices_list: # if a new device is found
+#                self.new_devices_list.append(d) # append to be added in the tree
+#        print "NEW DEVICES"
+#        print self.new_devices
+#        print "NEW DEVICES LIST"
+#        print self.new_devices_list
+#        print "OLD DEVICES LIST "
+#        print self.devices_list
+#
+        self.AddTreeNodes(self.root, self.new_devices)
         self.tree.Refresh()
+        #self.devices_list = self.new_devices # update devices_list to reflect the current devices in the tree
 
     def OnExpand(self, event):
         self.ExpandAll()

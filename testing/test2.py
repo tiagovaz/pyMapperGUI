@@ -1,7 +1,7 @@
 from pyo import *
 import mapper
 from random import uniform
-
+import time
 
 s = Server(audio='jack').boot()
 s.start()
