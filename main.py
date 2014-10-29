@@ -27,23 +27,25 @@ import os
 #### - build on Win
 #### - add save as / save current
 #### - add menu options for saving/loading
-### - push it to Debian!
 #### - update to wxpython3
 # - add a sort of realtime visualization from input/output data (une line simple comme option dans une column)
 
-# DONE:
-##### - save/load state files - OK!!!
-# - update to new mapper API - OK!
+## DONE from last meeting:
+#- save/load state files - OK!!!
+#- update to new mapper API - OK!
+#- push it to Debian! OK!!
 
 # FIXME:
 # - network interface selection
 # - auto-refresh should list new found devices
 # - calibrate feature is broken-ish
-# - device creation doesn't work
 
 class MyFrame(wx.Frame):
     def __init__(self, parent, title, size):
         wx.Frame.__init__(self, parent, -1, title=title, size=size)
+
+        # connections state file
+        self.currentFile = None
 
         # mapper object
         self.my_mapper = mymapper.MyMapper()
@@ -87,12 +89,12 @@ class MyFrame(wx.Frame):
         self.toolbar.SetToolBitmapSize((22, 22))  # sets icon size
 
         load_ico = wx.Bitmap(icons_folder + 'document-open.png')
-        load_tool = self.toolbar.AddSimpleTool(wx.ID_ANY, load_ico, "Load state file",
-                                               "Loads a saved connections state.")
-        self.Bind(wx.EVT_MENU, self.OnLoad, load_tool)
+        load_tool = self.toolbar.AddSimpleTool(wx.ID_ANY, load_ico, "Open state file",
+                                               "Open a state file")
+        self.Bind(wx.EVT_MENU, self.OnOpen, load_tool)
 
         save_ico = wx.Bitmap(icons_folder + 'document-save-as.png')
-        save_tool = self.toolbar.AddSimpleTool(wx.ID_ANY, save_ico, "Save state file", "Saves the current connections.")
+        save_tool = self.toolbar.AddSimpleTool(wx.ID_ANY, save_ico, "Save state file", "Saves the current connections")
         self.Bind(wx.EVT_MENU, self.OnSave, save_tool)
 
         self.toolbar.AddSeparator()
@@ -198,10 +200,18 @@ class MyFrame(wx.Frame):
         ## statusbar
         self.statusbar = self.CreateStatusBar()
 
-        ## menubar #TODO: rename menus
+        ## menubar
         menu_bar = wx.MenuBar()
         menu1 = wx.Menu()
-        menu1.Append(102, "&Close", "Close application")
+        menu1.Append(wx.ID_OPEN, "Open\tCtrl+O", "Open state file...")
+        self.Bind(wx.EVT_MENU, self.OnOpen, id=wx.ID_OPEN)
+        menu1.Append(wx.ID_SAVE, "Save\tCtrl+S", "Save current state file")
+        self.Bind(wx.EVT_MENU, self.OnSave, id=wx.ID_SAVE)
+        menu1.Append(wx.ID_SAVEAS, "Save as...\tShift+Ctrl+S", "Save state file")
+        self.Bind(wx.EVT_MENU, self.OnSaveAs, id=wx.ID_SAVEAS)
+        menu1.AppendSeparator()
+        menu1.Append(wx.ID_EXIT, "&Close", "Close application")
+        self.Bind(wx.EVT_MENU, self.OnQuit, id=wx.ID_EXIT)
         menu_bar.Append(menu1, "&File")
 
         menu2 = wx.Menu()
@@ -227,7 +237,6 @@ class MyFrame(wx.Frame):
 
 
         self.SetMenuBar(menu_bar)
-        self.Bind(wx.EVT_MENU, self.OnQuit, id=102)
 
         ## source/destination search
         self.sources_search = wx.SearchCtrl(self.main_panel, size=(240, -1), style=wx.TE_PROCESS_ENTER)
@@ -447,21 +456,28 @@ Suite 330, Boston, MA  02111-1307  USA"""
         self.statusbar.SetStatusText(statusbar_text)
         self.my_mapper.poll(50)
 
-    def OnSave(self, event):
+    def OnSaveAs(self, event):
         wildcard = "PyMapper file (.pym)|*.pym"
         dlg = wx.FileDialog(self, "Save file as...", os.path.expanduser("~"), "connections.pym",
                             wildcard=wildcard, style=wx.FD_SAVE)
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
-            self.currentFile = path
+            self.currentFile = path # useful for OnSave()
             self.SetTitle("pyMapper - %s" % path)
             f = open(path, "w")
             f.write(str(self.mapper_storage.serialise(self.my_mapper.mon, self.my_mapper.getAllDevices())))
             f.close()
         dlg.Destroy()
 
+    def OnSave(self, event):
+        if self.currentFile == None:
+            self.OnSaveAs(event)
+        else:
+            f = open(self.currentFile, "w")
+            f.write(str(self.mapper_storage.serialise(self.my_mapper.mon, self.my_mapper.getAllDevices())))
+            f.close()
 
-    def OnLoad(self, event):
+    def OnOpen(self, event):
         wildcard = "pyMapper file (.pym)|*.pym"
         dlg = wx.FileDialog(self, "Open pyMapper file...", os.path.expanduser("~"), 
                             wildcard=wildcard, style=wx.FD_OPEN)

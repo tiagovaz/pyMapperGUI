@@ -1,0 +1,24 @@
+TODO:
+
+- explore expressions and create preset (filtres...)
+- documentation
+- supports more than one level hierarchy for signals (ex. /dev1/signal/x)
+- possible connection to Zyne synth ? (may have a 'create mapper device' option in Zyne)
+- selected/modify connection info (right click, maybe selecting connection line)
+- add pure OSC support
+- build on Mac
+- build on Win
+- add menu options for saving/loading
+- update to wxpython3
+- add a sort of realtime visualization from input/output data (une line simple comme option dans une column, how to insert a line into ctrlList?)
+- auto-refresh should list new found devices (hard)
+- network interface selection (coded, but doesn't seem to work, needs debug)
+
+Recently DONE:
+
+- update to new mapper API
+- save/load state files
+- push it to Debian
+- add save as / save current menu
+- calibrate feature is broken-ish
+
