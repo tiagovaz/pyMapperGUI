@@ -14,32 +14,6 @@ from Resources.dialogs import *
 from Resources.storage import *
 import os
 
-# TODO:
-#### - explore expressions and create preset (filtres...)
-# - documentation
-# - supports more than one level hierarchy for signals (ex. /dev1/signal/x)
-# - possible connection to Zyne synth ? (may have a 'create mapper device' option in Zyne)
-# - select network interface (new_admin() doesn't exist !?)
-# - selected connection info (right click, but which panel?)
-# - selected signal info + edit
-### - add pure OSC support
-#### - build on Mac
-#### - build on Win
-#### - add save as / save current
-#### - add menu options for saving/loading
-#### - update to wxpython3
-# - add a sort of realtime visualization from input/output data (une line simple comme option dans une column)
-
-## DONE from last meeting:
-#- save/load state files - OK!!!
-#- update to new mapper API - OK!
-#- push it to Debian! OK!!
-
-# FIXME:
-# - network interface selection
-# - auto-refresh should list new found devices
-# - calibrate feature is broken-ish
-
 class MyFrame(wx.Frame):
     def __init__(self, parent, title, size):
         wx.Frame.__init__(self, parent, -1, title=title, size=size)
@@ -124,10 +98,6 @@ class MyFrame(wx.Frame):
         self.expression_y = wx.StaticText(self.toolbar, -1, " y = ")
         #self.expression_input = wx.TextCtrl(self.toolbar, -1, "",  style=wx.TE_PROCESS_ENTER, size=(220, 26))
         self.expr_list = ['x - x{-1}', 'x + y{-1}', 'x * 0.01 + y{-1} * 0.99', 'y{-1} + 1']
-        # FIXME:
-        #       - set values from a config file
-        #       - save last expressions
-        #       - consider min/max values (cache pour l'usageur!)
 
         self.expression_input = wx.ComboBox(self.toolbar, -1, "", size=(220, 26),
                                             choices=self.expr_list, style=wx.CB_DROPDOWN | wx.TE_PROCESS_ENTER)
@@ -140,8 +110,6 @@ class MyFrame(wx.Frame):
         self.toolbar.AddControl(self.expression_y)
         self.toolbar.AddControl(self.expression_input)
 
-        # mute button
-        # TODO: add mute icon
         # mute_ico = wx.Bitmap(icons_folder + 'audio-volume-muted-blocked-panel.png')
         self.mute_tool = wx.ToggleButton(self.toolbar, -1, "Mute", size=(50, 26))
         self.mute_tool.SetToolTipString('Mute/Unmute a connection')
@@ -155,7 +123,6 @@ class MyFrame(wx.Frame):
         self.arrow_range2.Disable()
 
         # source / dest range input
-        #TODO: set increment based on current value (cool!)
         self.toolbar.AddSeparator()
         self.src_range_label = wx.StaticText(self.toolbar, -1, " Src. range: ")
         self.src_range_label.Disable()
@@ -359,12 +326,10 @@ class MyFrame(wx.Frame):
             self.expression_y.Disable()
         #            self.set_expr_tool.Disable()
         # update expression after changing mode
-        #TODO: do not use a mapper instance here and another in panels...
         connection_data = self.my_mapper.getConnectionBySignalFullNames(self.sources_panel.GetSignalAddress(),
                                                                         self.destinations_panel.GetSignalAddress())
         self.expression_input.SetValue(connection_data["expression"].split('=')[1])
 
-    #TODO: do not repeat code
     def OnSetSourceMin(self, event):
         f = event.GetEventObject().GetValue()
         self.my_mapper.Modify(self.sources_panel.GetSignalAddress(),
@@ -491,14 +456,13 @@ Suite 330, Boston, MA  02111-1307  USA"""
             text = f.read()
             f.close()
             devices_list = self.my_mapper.getInputOutputDevices()
-            #TODO: update menu (mute, min, max, expression etc) when loading new file
             self.mapper_storage.deserialise(self.my_mapper.mon, text, devices_list)
         dlg.Destroy()
 
     def OnDelete(self, event):
         pass
 
-    def OnConnect(self, event):  #TODO: link just if first connection
+    def OnConnect(self, event):
         self.my_mapper.setLink("/" + self.sources_panel.GetSignalAddress().split("/")[1],
                                "/" + self.destinations_panel.GetSignalAddress().split("/")[1], {})
         self.my_mapper.Connect(self.sources_panel.GetSignalAddress(),
@@ -506,14 +470,14 @@ Suite 330, Boston, MA  02111-1307  USA"""
                                options={})
         self.connections_panel.DrawConnectionsLines()
 
-    def OnDisconnect(self, event):  #TODO: unlink if last connection
+    def OnDisconnect(self, event):
         self.my_mapper.Disconnect(self.sources_panel.GetSignalAddress(),
                                   self.destinations_panel.GetSignalAddress())
         self.connections_panel.DrawConnectionsLines()
 
-    def OnDisconnectAll(self, event):  #TODO: unlink if last connection (or keep it linked?)
+    def OnDisconnectAll(self, event):
         for c in self.my_mapper.getConnections():
-            self.my_mapper.Disconnect(c["src_name"], c["dest_name"])  #TODO: unlink ?
+            self.my_mapper.Disconnect(c["src_name"], c["dest_name"])
         self.connections_panel.DrawConnectionsLines()
 
     def OnRefresh(self, event):

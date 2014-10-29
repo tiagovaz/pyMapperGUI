@@ -1,6 +1,6 @@
 import mapper
 
-class MyMapper():  #TODO: refactore this to heritage from mapper library
+class MyMapper():
     def __init__(self):
         self.mon = mapper.monitor(autosubscribe_flags=mapper.SUB_DEVICE)
         self.initMonitor()
@@ -17,7 +17,6 @@ class MyMapper():  #TODO: refactore this to heritage from mapper library
         self.OSC_devices = []
 
     def initMonitor(self):
-        # TODO: assign callbacks
         self.mon.request_devices()
 
     def poll(self, time):
@@ -31,7 +30,7 @@ class MyMapper():  #TODO: refactore this to heritage from mapper library
     def setLink(self, source, dest, options={}):
         self.mon.link(source, dest, options)
 
-    def Connect(self, src, dest, options=None): #TODO: make config file for default conn setup
+    def Connect(self, src, dest, options=None):
         if not options: options = dict(mode=mapper.MO_LINEAR, bound_min=mapper.BA_WRAP,
                                        bound_max=mapper.BA_CLAMP)
         self.mon.poll(20)

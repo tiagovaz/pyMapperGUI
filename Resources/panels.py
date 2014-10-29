@@ -26,7 +26,6 @@ class ConnectionsPanel(wx.Panel):
         for c in self.my_mapper.getConnections():
             src = c["src_name"]
             dest = c["dest_name"]
-            #TODO: draw red lines for linked devices
             src_item_id = self.GetParent().GetParent().sources_panel.GetItemByLabel(src, self.GetParent().GetParent().sources_panel.GetRootItem())
             dest_item_id = self.GetParent().GetParent().destinations_panel.GetItemByLabel(dest, self.GetParent().GetParent().destinations_panel.GetRootItem())
             conn_ids.append((src_item_id, dest_item_id))
@@ -63,7 +62,6 @@ class MyTreeList(wx.Panel):
                                            | wx.TR_FULL_ROW_HIGHLIGHT
                                            | wx.TR_HAS_BUTTONS + wx.TR_HIDE_ROOT,
                                            size=(530, 600))
-        # TODO: dynamic adjustment (?) - see available methods
         self.tree.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OnActivate, self.tree)
         self.tree.Bind(wx.EVT_TREE_ITEM_EXPANDED, self.changed, self.tree)
         self.tree.Bind(wx.EVT_TREE_ITEM_COLLAPSED, self.changed, self.tree)
@@ -194,7 +192,6 @@ class MyTreeList(wx.Panel):
 
     def NewConnection(self):
         # set link and connection with libmapper
-        # TODO: set link only if there's no link
         conns = self.my_mapper.getConnectionBySignalFullNames(self.GetParent().GetParent().sources_panel.GetSignalAddress(), self.GetParent().GetParent().destinations_panel.GetSignalAddress())
         if conns is None:
             self.my_mapper.setLink("/"+self.GetParent().GetParent().sources_panel.GetSignalAddress().split("/")[1], "/"+self.GetParent().GetParent().destinations_panel.GetSignalAddress().split("/")[1], {})
@@ -206,7 +203,6 @@ class MyTreeList(wx.Panel):
         self.tree.SetSize(self.GetSize())
 
 
-    #TODO: put some brain here
     def AddTreeNodes(self, parentItem, items):
         for item in items:
             bg_color = 0
@@ -278,7 +274,7 @@ class MyTreeList(wx.Panel):
     def GetRootItem(self):
         return self.tree.GetRootItem()
 
-    def CollapseAll(self): #TODO: Collapse doesnt work, why? Shouldn't be recursive?
+    def CollapseAll(self):
         self.tree.Collapse(self.tree.GetRootItem())
 
     def OnCollapse(self, event):
@@ -287,7 +283,7 @@ class MyTreeList(wx.Panel):
     def GetSelection(self):
         return self.tree.GetSelection()
 
-    def GetSignalAddress(self): #TODO: make this more readable
+    def GetSignalAddress(self):
         return str(self.tree.GetItemText(self.tree.GetItemParent(self.tree.GetSelection())) +
                    self.tree.GetItemText(self.tree.GetSelection()))
 

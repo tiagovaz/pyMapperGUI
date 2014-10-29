@@ -77,9 +77,7 @@ class Storage:
         srcdevs = devices['sources']
         destdevs = devices['destinations']
         links = [( str(x), str(y) ) for x in srcdevs for y in destdevs]
-        print links
         for l in links:
-            # TODO: Only make a link if it does not already exist
             monitor.link(l[0], l[1], {})
             monitor.poll(100)
         for c in m['connections']:
