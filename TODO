@@ -25,6 +25,8 @@ TODO:
 - unlink devices when requested
 - draw a red line for linked devices
 - add collapse all (added, but wx method doesn't work, needs debug)
+- create a logo and make an icon
+- make Debian package for pymapper (may change the tool name)
 
 Recently DONE:
 
