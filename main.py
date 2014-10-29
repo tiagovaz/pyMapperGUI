@@ -18,8 +18,9 @@ class MyFrame(wx.Frame):
     def __init__(self, parent, title, size):
         wx.Frame.__init__(self, parent, -1, title=title, size=size)
 
-        # connections state file
+        # connections and expr preset files
         self.currentFile = None
+        self.currentPresetFile = None
 
         # mapper object
         self.my_mapper = mymapper.MyMapper()
@@ -97,11 +98,11 @@ class MyFrame(wx.Frame):
         # expression for mapping
         self.expression_y = wx.StaticText(self.toolbar, -1, " y = ")
         #self.expression_input = wx.TextCtrl(self.toolbar, -1, "",  style=wx.TE_PROCESS_ENTER, size=(220, 26))
-        self.expr_list = ['x - x{-1}', 'x + y{-1}', 'x * 0.01 + y{-1} * 0.99', 'y{-1} + 1']
+        #self.expr_list = ['x - x{-1}', 'x + y{-1}', 'x * 0.01 + y{-1} * 0.99', 'y{-1} + 1']
+        self.expr_list = []
 
         self.expression_input = wx.ComboBox(self.toolbar, -1, "", size=(220, 26),
                                             choices=self.expr_list, style=wx.CB_DROPDOWN | wx.TE_PROCESS_ENTER)
-        self.expression_input.Append("foo", "This is some client data for this item")
 
         self.expression_input.SetToolTipString('Type ENTER after writing your new expression')
         self.Bind(wx.EVT_TEXT_ENTER, self.OnSetExpr, self.expression_input)
@@ -194,12 +195,21 @@ class MyFrame(wx.Frame):
 
         self.Bind(wx.EVT_MENU, self.OnAddOSCDevice, id=202)
 
+        menu_expression = wx.Menu()
+        menu_expression.Append(301, "Load preset...", "Open expression preset file...")
+        self.Bind(wx.EVT_MENU, self.OnOpenPreset, id=301)
+        menu_expression.Append(302, "Save preset...", "Save current expressions as a preset...")
+        self.Bind(wx.EVT_MENU, self.OnSavePreset, id=302)
+        menu_expression.Append(303, "Save preset as...", "Save current expressions as a new preset...")
+        self.Bind(wx.EVT_MENU, self.OnSaveAsPreset, id=303)
+        menu_bar.Append(menu_expression, "&Expressions")
+
         menu3 = wx.Menu()
-        menu3.Append(301, "&Docs", "Documentation")
-        menu3.Append(302, "&About", "About")
+        menu3.Append(401, "&Docs", "Documentation")
+        menu3.Append(402, "&About", "About")
         menu_bar.Append(menu3, "&Help",)
 
-        self.Bind(wx.EVT_MENU, self.OnAboutBox, id=302)
+        self.Bind(wx.EVT_MENU, self.OnAboutBox, id=402)
 
 
 
@@ -457,6 +467,45 @@ Suite 330, Boston, MA  02111-1307  USA"""
             f.close()
             devices_list = self.my_mapper.getInputOutputDevices()
             self.mapper_storage.deserialise(self.my_mapper.mon, text, devices_list)
+        dlg.Destroy()
+
+    def OnOpenPreset(self, event):
+        wildcard = "pyMapper file (.pre)|*.pre"
+        dlg = wx.FileDialog(self, "Open preset file...", os.path.expanduser("~"),
+                            wildcard=wildcard, style=wx.FD_OPEN)
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()
+            if path == "":
+                return
+            self.currentPresetFile = path
+            self.SetTitle("pyMapper - %s" % os.path.split(path)[1])
+            f = open(path, "r")
+            text = f.read()
+            f.close()
+            self.expr_list = eval(text)
+            self.expression_input.Clear()
+            self.expression_input.AppendItems(self.expr_list)
+        dlg.Destroy()
+
+    def OnSavePreset(self, event):
+        if self.currentPresetFile == None:
+            self.OnSaveAsPreset(event)
+        else:
+            f = open(self.currentPresetFile, "w")
+            f.write(str(self.expr_list))
+            f.close()
+
+    def OnSaveAsPreset(self, event):
+        wildcard = "PyMapper expression preset file (.pre)|*.pre"
+        dlg = wx.FileDialog(self, "Save file as...", os.path.expanduser("~"), "expressions.pre",
+                            wildcard=wildcard, style=wx.FD_SAVE)
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()
+            self.currentFile = path # useful for OnSave()
+            self.SetTitle("pyMapper - %s" % path)
+            f = open(path, "w")
+            f.write(str(self.expr_list))
+            f.close()
         dlg.Destroy()
 
     def OnDelete(self, event):

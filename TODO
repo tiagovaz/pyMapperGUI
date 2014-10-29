@@ -27,6 +27,7 @@ TODO:
 - add collapse all (added, but wx method doesn't work, needs debug)
 - create a logo and make an icon
 - make Debian package for pymapper (may change the tool name)
+- migrate to wx3
 
 Recently DONE:
 
