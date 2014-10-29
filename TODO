@@ -1,7 +1,6 @@
 TODO:
 
-- explore expressions and create preset (filtres...)
-- documentation
+- explore interesting expressions and add them in the default preset
 - add config file for default connections setup (mode=mapper.MO_LINEAR, bound_min=mapper.BA_WRAP,
                                        bound_max=mapper.BA_CLAMP)
 - supports more than one level hierarchy for signals (ex. /dev1/signal/x)
@@ -15,7 +14,6 @@ TODO:
 - add a sort of realtime visualization from input/output data (une line simple comme option dans une column, how to insert a line into ctrlList?)
 - auto-refresh should list new found devices (hard)
 - network interface selection (coded, but doesn't seem to work, needs debug)
-- add expression presets
 - add mute icon
 - set increment offset automatically based on current min/max values
 - clean code at OnSetSourceMin and AddTreeNodes (avoid duplication)
@@ -28,9 +26,11 @@ TODO:
 - create a logo and make an icon
 - make Debian package for pymapper (may change the tool name)
 - migrate to wx3
+- add class/methods documentation
 
 Recently DONE:
 
+- add expression presets load/save
 - update to new mapper API
 - save/load state files
 - push it to Debian
