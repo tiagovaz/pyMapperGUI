@@ -79,48 +79,46 @@ class Storage:
         links = [( str(x), str(y) ) for x in srcdevs for y in destdevs]
         for l in links:
             monitor.link(l[0], l[1], {})
-            monitor.poll(100)
+            monitor.poll(10)
         for c in m['connections']:
             #The name of the source signal (without device, assuming 1 to 1 for now)
             srcsig = str(c['src'][0]).split('/')[2]
             #And the destination
             destsig = str(c['dest'][0]).split('/')[2]
 
-            for l in links:
-               if monitor.db.get_link_by_src_dest_names(l[0], l[1]):
-                    args = (str(l[0]+'/'+srcsig),
-                            str(l[1]+'/'+destsig),
-                            {})
-                    if 'mode' in c:
-                        args[2]['mode'] = modeIdx[c['mode']]
-                    if 'expression' in c:
-                        args[2]['expression'] = str(c['expression']
-                                                    .replace('src[0]', 'x')
-                                                    .replace('dest[0]', 'y'))
-                    if 'srcMin' in c:
-                        args[2]['src_min'] = c['srcMin']
-                    if 'srcMax' in c:
-                        args[2]['src_max'] = c['srcMax']
-                    if 'destMin' in c:
-                        args[2]['dest_min'] = c['destMin']
-                    if 'destMax' in c:
-                        args[2]['dest_max'] = c['destMax']
-                    if 'boundMin' in c:
-                        args[2]['bound_min'] = boundIdx[c['boundMin']]
-                    if 'boundMax' in c:
-                        args[2]['bound_max'] = boundIdx[c['boundMax']]
-                    if 'mute' in c:
-                        args[2]['muted'] = c['mute']
+            args = (str(c['src'][0]),
+                    str(c['dest'][0]),
+                    {})
+            if 'mode' in c:
+                args[2]['mode'] = modeIdx[c['mode']]
+            if 'expression' in c:
+                args[2]['expression'] = str(c['expression']
+                                            .replace('src[0]', 'x')
+                                            .replace('dest[0]', 'y'))
+            if 'srcMin' in c:
+                args[2]['src_min'] = c['srcMin']
+            if 'srcMax' in c:
+                args[2]['src_max'] = c['srcMax']
+            if 'destMin' in c:
+                args[2]['dest_min'] = c['destMin']
+            if 'destMax' in c:
+                args[2]['dest_max'] = c['destMax']
+            if 'boundMin' in c:
+                args[2]['bound_min'] = boundIdx[c['boundMin']]
+            if 'boundMax' in c:
+                args[2]['bound_max'] = boundIdx[c['boundMax']]
+            if 'mute' in c:
+                args[2]['muted'] = c['mute']
 
-                    # If connection already exists, use 'modify', otherwise 'connect'.
-                    # Assumes 1 to 1, again
-                    cs = list(monitor.db.connections_by_device_and_signal_names(
-                        (l[0]).split('/')[1], srcsig,
-                        (l[1]).split('/')[1], destsig) )
-                    if len(cs) > 0:
-                        monitor.modify_connection(args[0], args[1], args[2])
-                    else:
-                        monitor.connect(*args)
+            # If connection already exists, use 'modify', otherwise 'connect'.
+            # Assumes 1 to 1, again
+            cs = list(monitor.db.connections_by_device_and_signal_names(
+                (l[0]).split('/')[1], srcsig,
+                (l[1]).split('/')[1], destsig) )
+            if len(cs) > 0:
+                monitor.modify_connection(args[0], args[1], args[2])
+            else:
+                monitor.connect(*args)
 
 if __name__ == "__main__":
     m = mapper.monitor(autosubscribe_flags=mapper.SUB_DEVICE)

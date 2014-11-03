@@ -242,12 +242,16 @@ class MyTreeList(wx.Panel):
         # Add nodes (devices and their signals) to the trees
         # keep last devices list, compare with current and update if changed
         # same for removing item (DO NOT REBUILD ALL TREE)
-        self.tree.DeleteAllItems()
-        # Hidden tree root node
-        self.root = self.tree.AddRoot("")
         self.new_devices_list = []
         self.new_devices = self.my_mapper.getAllDevices()
-        self.getAllItems()
+        if self.new_devices != self.devices_list:
+            self.tree.DeleteAllItems()
+            # Hidden tree root node
+            self.root = self.tree.AddRoot("")
+            self.AddTreeNodes(self.root, self.new_devices)
+            self.tree.Refresh()
+            self.devices_list = self.new_devices
+
 #        for d in self.devices_list:
 #            if d not in self.new_devices: # if a device disappeared
 #                self.tree.Delete(self.GetItemByLabel(d, self.root)) # delete it from the tree
@@ -261,8 +265,6 @@ class MyTreeList(wx.Panel):
 #        print "OLD DEVICES LIST "
 #        print self.devices_list
 #
-        self.AddTreeNodes(self.root, self.new_devices)
-        self.tree.Refresh()
         #self.devices_list = self.new_devices # update devices_list to reflect the current devices in the tree
 
     def OnExpand(self, event):

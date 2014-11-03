@@ -419,7 +419,7 @@ Suite 330, Boston, MA  02111-1307  USA"""
         wx.CallAfter(self.destinations_panel.RefreshAll)
         wx.CallAfter(self.sources_panel.ExpandAll)
         wx.CallAfter(self.destinations_panel.ExpandAll)
-        self.redraw()
+#        self.redraw()
 
     # redraw the connections
     # try to call inside a Timer
@@ -429,7 +429,8 @@ Suite 330, Boston, MA  02111-1307  USA"""
     def OnTimer(self, event):
         statusbar_text = str(len(self.my_mapper.getConnections())) + " connection(s)"
         self.statusbar.SetStatusText(statusbar_text)
-        self.my_mapper.poll(50)
+        self.RefreshAll()
+        self.my_mapper.poll(10)
 
     def OnSaveAs(self, event):
         wildcard = "PyMapper file (.pym)|*.pym"

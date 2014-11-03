@@ -1,5 +1,6 @@
 TODO:
 
+- FIX double connection in state file
 - explore interesting expressions and add them in the default preset
 - add config file for default connections setup (mode=mapper.MO_LINEAR, bound_min=mapper.BA_WRAP,
                                        bound_max=mapper.BA_CLAMP)
@@ -35,5 +36,5 @@ Recently DONE:
 - save/load state files
 - push it to Debian
 - add save as / save current menu
-- calibrate feature is broken-ish
+- calibrate ok
 
