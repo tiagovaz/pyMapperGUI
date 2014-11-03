@@ -1,6 +1,5 @@
 TODO:
 
-- FIX double connection in state file
 - explore interesting expressions and add them in the default preset
 - add config file for default connections setup (mode=mapper.MO_LINEAR, bound_min=mapper.BA_WRAP,
                                        bound_max=mapper.BA_CLAMP)
@@ -31,6 +30,7 @@ TODO:
 
 Recently DONE:
 
+- FIX double connection in state file
 - add expression presets load/save
 - update to new mapper API
 - save/load state files
