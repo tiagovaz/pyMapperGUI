@@ -417,8 +417,8 @@ Suite 330, Boston, MA  02111-1307  USA"""
     def RefreshAll(self):
         wx.CallAfter(self.sources_panel.RefreshAll)
         wx.CallAfter(self.destinations_panel.RefreshAll)
-        wx.CallAfter(self.sources_panel.ExpandAll)
-        wx.CallAfter(self.destinations_panel.ExpandAll)
+#        wx.CallAfter(self.sources_panel.ExpandAll)
+#        wx.CallAfter(self.destinations_panel.ExpandAll)
 #        self.redraw()
 
     # redraw the connections

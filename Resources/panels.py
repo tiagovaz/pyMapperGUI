@@ -97,7 +97,7 @@ class MyTreeList(wx.Panel):
         self.RefreshAll()
 
         # Expand the first level by default
-        self.tree.ExpandAll(self.root)
+        #self.tree.ExpandAll(self.root)
 
     def OnItemChanged(self, evt):
         # show the connection expression and src/dest min/max in the toolbar
@@ -250,6 +250,7 @@ class MyTreeList(wx.Panel):
             self.root = self.tree.AddRoot("")
             self.AddTreeNodes(self.root, self.new_devices)
             self.tree.Refresh()
+            self.ExpandAll()
             self.devices_list = self.new_devices
 
 #        for d in self.devices_list:
