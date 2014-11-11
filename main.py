@@ -26,6 +26,7 @@ class MyFrame(wx.Frame):
         # mapper object
         self.my_mapper = mymapper.MyMapper()
         self.modes_list = self.my_mapper.modes_dict.keys()
+        self.boundaries_list = self.my_mapper.boundaries_dict.keys()
 
         # storage object
         self.mapper_storage = Storage()
@@ -165,6 +166,16 @@ class MyFrame(wx.Frame):
         self.toolbar.AddControl(self.dest_range_min)
         self.toolbar.AddControl(self.arrow_range2)
         self.toolbar.AddControl(self.dest_range_max)
+
+        self.toolbar.AddSeparator()
+
+        # edit other connection parameters from a dialog
+        self.edit_tool = wx.Button(self.toolbar, -1, "Edit all...", size=(60, 26))
+        self.edit_tool.SetToolTipString('Edit connection parameters...')
+#        self.edit_tool.Disable()
+        self.Bind(wx.EVT_BUTTON, self.OnEdit, self.edit_tool)
+        self.toolbar.AddControl(self.edit_tool)
+
 
         ## statusbar
         self.statusbar = self.CreateStatusBar()
@@ -313,6 +324,22 @@ class MyFrame(wx.Frame):
         self.my_mapper.Modify(self.sources_panel.GetSignalAddress(),
                               self.destinations_panel.GetSignalAddress(),
                               options={'muted': is_muted})
+
+    def OnEdit(self, event):
+        dlg = EditConnections(self, -1, "Edit connection parameters", size=(450, 300),
+                         #style=wx.CAPTION | wx.SYSTEM_MENU | wx.THICK_FRAME,
+                         style=wx.DEFAULT_DIALOG_STYLE, # & ~wx.CLOSE_BOX,
+                         useMetal=False,
+                         )
+        dlg.CenterOnScreen()
+        # this does not return until the dialog is closed.
+        val = dlg.ShowModal()
+
+
+        #code here
+
+
+        dlg.Destroy()
 
     def OnSetExpr(self, event):
         expression = 'y=' + self.expression_input.GetValue()

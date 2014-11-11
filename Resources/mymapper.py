@@ -10,10 +10,22 @@ class MyMapper():
         self.mo_linear = mapper.MO_LINEAR
         self.mo_bypass = mapper.MO_BYPASS
 
+        self.ba_none = mapper.BA_NONE
+        self.ba_mute = mapper.BA_MUTE
+        self.ba_clamp = mapper.BA_CLAMP
+        self.ba_fold = mapper.BA_FOLD
+        self.ba_wrap = mapper.BA_WRAP
+
         self.modes_dict = {'Bypass': mapper.MO_BYPASS, 'Calibrate': mapper.MO_CALIBRATE, 'Reverse': mapper.MO_REVERSE,
                            'Linear': mapper.MO_LINEAR, 'Expression': mapper.MO_EXPRESSION}
-        # we often need to fetch reversed info from the dictionay above:
+
+        self.boundaries_dict = {'None': mapper.BA_NONE, 'Mute': mapper.BA_MUTE, 'Clamp': mapper.BA_CLAMP,
+                           'Fold': mapper.BA_FOLD, 'Wrap': mapper.BA_WRAP}
+
+        # we often need to fetch reversed info from the dictionaries above:
         self.modes_dict_rev = dict((v,k) for k, v in self.modes_dict.iteritems())
+        self.boundaries_dict_rev = dict((v,k) for k, v in self.boundaries_dict.iteritems())
+
         self.OSC_devices = []
 
     def initMonitor(self):

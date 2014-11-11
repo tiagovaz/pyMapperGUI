@@ -100,18 +100,19 @@ class MyTreeList(wx.Panel):
         # FIXME: breaks if there's no item in the list
         #self.tree.ExpandAll(self.root)
 
+
     def OnItemChanged(self, evt):
         # show the connection expression and src/dest min/max in the toolbar
         src = self.GetParent().GetParent().sources_panel.GetSignalAddress()
         dest = self.GetParent().GetParent().destinations_panel.GetSignalAddress()
         #FIXME: gizmos module seems to have a bug here
-        print type(src) + dest
         connection_data = self.my_mapper.getConnectionBySignalFullNames(src, dest)
 
         if connection_data is None:
             # disable controls
             self.GetParent().GetParent().mode_choice.Disable()
             self.GetParent().GetParent().mute_tool.Disable()
+#            self.GetParent().GetParent().edit_tool.Disable()
             self.GetParent().GetParent().expression_input.Disable()
             self.GetParent().GetParent().expression_y.Disable()
             self.GetParent().GetParent().arrow_range.Disable()
@@ -137,6 +138,7 @@ class MyTreeList(wx.Panel):
             # enable controls
             self.GetParent().GetParent().mode_choice.Enable()
             self.GetParent().GetParent().mute_tool.Enable()
+#            self.GetParent().GetParent().edit_tool.Enable()
             if connection_data["mode"] == self.my_mapper.mo_expression:
                 self.GetParent().GetParent().expression_input.Enable()
                 self.GetParent().GetParent().expression_y.Enable()
