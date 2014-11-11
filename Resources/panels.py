@@ -61,7 +61,7 @@ class MyTreeList(wx.Panel):
                                            wx.TR_DEFAULT_STYLE
                                            | wx.TR_FULL_ROW_HIGHLIGHT
                                            | wx.TR_HAS_BUTTONS + wx.TR_HIDE_ROOT,
-                                           size=(530, 600))
+                                           size=(530, 100))
         self.tree.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OnActivate, self.tree)
         self.tree.Bind(wx.EVT_TREE_ITEM_EXPANDED, self.changed, self.tree)
         self.tree.Bind(wx.EVT_TREE_ITEM_COLLAPSED, self.changed, self.tree)
@@ -97,12 +97,15 @@ class MyTreeList(wx.Panel):
         self.RefreshAll()
 
         # Expand the first level by default
+        # FIXME: breaks if there's no item in the list
         #self.tree.ExpandAll(self.root)
 
     def OnItemChanged(self, evt):
         # show the connection expression and src/dest min/max in the toolbar
         src = self.GetParent().GetParent().sources_panel.GetSignalAddress()
         dest = self.GetParent().GetParent().destinations_panel.GetSignalAddress()
+        #FIXME: gizmos module seems to have a bug here
+        print type(src) + dest
         connection_data = self.my_mapper.getConnectionBySignalFullNames(src, dest)
 
         if connection_data is None:
@@ -287,8 +290,8 @@ class MyTreeList(wx.Panel):
         return self.tree.GetSelection()
 
     def GetSignalAddress(self):
-        return str(self.tree.GetItemText(self.tree.GetItemParent(self.tree.GetSelection())) +
-                   self.tree.GetItemText(self.tree.GetSelection()))
+#        print self.tree.GetItemText(self.tree.GetItemParent(self.tree.GetSelection())) + self.tree.GetItemText(self.tree.GetSelection())
+        return str(self.tree.GetItemText(self.tree.GetItemParent(self.tree.GetSelection())) + self.tree.GetItemText(self.tree.GetSelection()))
 
     def GetItemText(self, item):
         if item:

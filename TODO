@@ -9,7 +9,6 @@ TODO:
 - add pure OSC support
 - build on Mac
 - build on Win
-- add menu options for saving/loading
 - update to wxpython3
 - add a sort of realtime visualization from input/output data (une line simple comme option dans une column, how to insert a line into ctrlList?)
 - auto-refresh should list new found devices (hard)
@@ -28,9 +27,17 @@ TODO:
 - add class/methods documentation
 - add new expression!
 
+- TODAY:
+
+- code search
+- define new project name, should be a bit disconnected to libmapper (dmi...)
+- update expression menu once it loads a new state file 
+- fix double connection in state file OK
+- Fix expanding tree elements when there's no device OK
+
 Recently DONE:
 
-- FIX double connection in state file
+- add menu options for saving/loading state
 - add expression presets load/save
 - update to new mapper API
 - save/load state files

@@ -1,5 +1,5 @@
-import wxversion
-wxversion.select("2.8")
+#import wxversion
+#wxversion.select("2.8")
 import wx
 import netifaces
 from wx.lib.mixins.inspection import InspectionMixin
@@ -15,8 +15,9 @@ from Resources.storage import *
 import os
 
 class MyFrame(wx.Frame):
-    def __init__(self, parent, title, size):
-        wx.Frame.__init__(self, parent, -1, title=title, size=size)
+    def __init__(self, parent, title):
+        #wx.Frame.__init__(self, parent, -1, title=title, size=size)
+        wx.Frame.__init__(self, parent, id=wx.ID_ANY, title=title, pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.DEFAULT_FRAME_STYLE)
 
         # connections and expr preset files
         self.currentFile = None
@@ -211,8 +212,6 @@ class MyFrame(wx.Frame):
 
         self.Bind(wx.EVT_MENU, self.OnAboutBox, id=402)
 
-
-
         self.SetMenuBar(menu_bar)
 
         ## source/destination search
@@ -366,9 +365,9 @@ class MyFrame(wx.Frame):
 
     def OnAboutBox(self, e):
 
-        description = """PyMapper is a cross-platform GUI for libmapper (http://libmapper.github.io/)"""
+        description = """PyMapperGUI is a cross-platform graphical interface for managing libmapper sessions (http://libmapper.github.io/)"""
 
-        licence = """PyMapper is free software; you can redistribute
+        licence = """PyMapperGUI is free software; you can redistribute
 it and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 3 of the License,
 or (at your option) any later version.
@@ -384,7 +383,7 @@ Suite 330, Boston, MA  02111-1307  USA"""
         info = wx.AboutDialogInfo()
 
    #     info.SetIcon(wx.Icon('pymapper.png', wx.BITMAP_TYPE_PNG))
-        info.SetName('PyMapper')
+        info.SetName('PyMapperGUI')
         info.SetVersion('1.0beta1')
         info.SetDescription(description)
         info.SetCopyright('(C) 2014 Tiago Bortoletto Vaz <tiago@debian.org>')
@@ -553,7 +552,7 @@ Suite 330, Boston, MA  02111-1307  USA"""
 class TestApp(wx.App, InspectionMixin):
     def OnInit(self):
         self.Init()
-        mainFrame = MyFrame(None, title="pymapper", size=(1600, 768))
+        mainFrame = MyFrame(None, title="pyMapperGUI")
         self.SetTopWindow(mainFrame)
         mainFrame.Show()
         return 1
