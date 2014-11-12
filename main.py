@@ -113,6 +113,11 @@ class MyFrame(wx.Frame):
         self.toolbar.AddControl(self.expression_y)
         self.toolbar.AddControl(self.expression_input)
 
+        # edit other connection parameters from a dialog
+        self.edit_tool = wx.Button(self.toolbar, -1, "Edit all...", size=(60, 26))
+        self.edit_tool.SetToolTipString('Edit connection parameters...')
+        self.Bind(wx.EVT_BUTTON, self.OnEdit, self.edit_tool)
+
         # mute_ico = wx.Bitmap(icons_folder + 'audio-volume-muted-blocked-panel.png')
         self.mute_tool = wx.ToggleButton(self.toolbar, -1, "Mute", size=(50, 26))
         self.mute_tool.SetToolTipString('Mute/Unmute a connection')
@@ -169,11 +174,6 @@ class MyFrame(wx.Frame):
 
         self.toolbar.AddSeparator()
 
-        # edit other connection parameters from a dialog
-        self.edit_tool = wx.Button(self.toolbar, -1, "Edit all...", size=(60, 26))
-        self.edit_tool.SetToolTipString('Edit connection parameters...')
-#        self.edit_tool.Disable()
-        self.Bind(wx.EVT_BUTTON, self.OnEdit, self.edit_tool)
         self.toolbar.AddControl(self.edit_tool)
 
 
@@ -326,20 +326,18 @@ class MyFrame(wx.Frame):
                               options={'muted': is_muted})
 
     def OnEdit(self, event):
-        dlg = EditConnections(self, -1, "Edit connection parameters", size=(450, 300),
-                         #style=wx.CAPTION | wx.SYSTEM_MENU | wx.THICK_FRAME,
-                         style=wx.DEFAULT_DIALOG_STYLE, # & ~wx.CLOSE_BOX,
-                         useMetal=False,
-                         )
-        dlg.CenterOnScreen()
-        # this does not return until the dialog is closed.
-        val = dlg.ShowModal()
-
-
-        #code here
-
-
-        dlg.Destroy()
+        if len(self.my_mapper.getConnections()) == 0:
+            wx.MessageBox('No connection found', 'Info', wx.OK | wx.ICON_ERROR)
+        else:
+            dlg = EditConnections(self, -1, "Edit connection parameters", size=(450, 300),
+                             #style=wx.CAPTION | wx.SYSTEM_MENU | wx.THICK_FRAME,
+                             style=wx.DEFAULT_DIALOG_STYLE, # & ~wx.CLOSE_BOX,
+                             useMetal=False,
+                             )
+            dlg.CenterOnScreen()
+            # this does not return until the dialog is closed.
+            val = dlg.ShowModal()
+            dlg.Destroy()
 
     def OnSetExpr(self, event):
         expression = 'y=' + self.expression_input.GetValue()

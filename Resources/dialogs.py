@@ -3,14 +3,11 @@ import wx.grid as gridlib
 import mymapper
 
 class CustomDataTable(gridlib.PyGridTableBase):
-    def __init__(self):
+    def __init__(self, connections):
         gridlib.PyGridTableBase.__init__(self)
 
-        self.my_mapper = mymapper.MyMapper()
-        self.connections = self.my_mapper.getConnections()
-
-        # there's at least one connection, let's use it create indexes
-        self.colLabels = self.connections[0].keys()
+        # there's at least one connection, let's use it for now to create indexes
+        self.colLabels = connections[0].keys()
 
         self.dataTypes = [
                           gridlib.GRID_VALUE_FLOAT,
@@ -26,20 +23,20 @@ class CustomDataTable(gridlib.PyGridTableBase):
                           gridlib.GRID_VALUE_FLOAT,
                           gridlib.GRID_VALUE_STRING,
                           gridlib.GRID_VALUE_STRING,
-                          gridlib.GRID_VALUE_NUMBER,
+                          gridlib.GRID_VALUE_BOOL,
                           gridlib.GRID_VALUE_STRING
                           ]
 
         self.data = []
 
-        for c in self.connections:
+        for c in connections:
             self.data.append(c.values())
 
     #--------------------------------------------------
     # required methods for the wxPyGridTableBase interface
 
     def GetNumberRows(self):
-        return len(self.data) + 1
+        return len(self.data)
 
     def GetNumberCols(self):
         return len(self.data[0])
@@ -92,10 +89,10 @@ class CustomDataTable(gridlib.PyGridTableBase):
 #---------------------------------------------------------------------------
 
 class CustTableGrid(gridlib.Grid):
-    def __init__(self, parent):
+    def __init__(self, parent, connections):
         gridlib.Grid.__init__(self, parent, -1)
 
-        table = CustomDataTable()
+        table = CustomDataTable(connections)
 
         # The second parameter means that the grid is to take ownership of the
         # table and will destroy it when done.  Otherwise you would need to keep
@@ -113,6 +110,10 @@ class EditConnections(wx.Dialog):
         self, parent, ID, title, size=wx.DefaultSize, pos=wx.DefaultPosition,
         style=wx.DEFAULT_DIALOG_STYLE, useMetal=False):
 
+
+        self.my_mapper = mymapper.MyMapper()
+        self.connections = self.my_mapper.getConnections()
+
         pre = wx.PreDialog()
         pre.SetExtraStyle(wx.DIALOG_EX_CONTEXTHELP)
         pre.Create(parent, ID, title, pos, size, style)
@@ -120,7 +121,7 @@ class EditConnections(wx.Dialog):
         self.PostCreate(pre)
 
         p = wx.Panel(self, -1, style=0)
-        grid = CustTableGrid(p)
+        grid = CustTableGrid(p, self.connections)
         bs = wx.BoxSizer(wx.VERTICAL)
         bs.Add(grid, 1, wx.EXPAND|wx.ALL, 5)
         p.SetSizer(bs)

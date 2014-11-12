@@ -9,7 +9,6 @@ TODO:
 - add pure OSC support
 - build on Mac
 - build on Win
-- add a sort of realtime visualization from input/output data (une line simple comme option dans une column, how to insert a line into ctrlList?)
 - auto-refresh should list new found devices (hard)
 - network interface selection (coded, but doesn't seem to work, needs debug)
 - add mute icon
@@ -17,27 +16,31 @@ TODO:
 - clean code at OnSetSourceMin and AddTreeNodes (avoid duplication)
 - refactore code for mapper instances, use only one monitor for everything
 - set menubar values when loading a state file
-- check links before linking devices
-- unlink devices when requested
-- draw a red line for linked devices
 - add collapse all (added, but wx method doesn't work, needs debug)
 - create a logo and make an icon
-- make Debian package for pymapper (may change the tool name)
+- make Debian package for pyMapperGUI
 - add class/methods documentation
-- add new expression!
+- add dialog to edit expression presets
+- devices search
 
 - TODAY:
 
-- add option to change connection mode
+- add a sort of realtime visualization from input/output data (une line simple comme option dans une column, how to insert a line into ctrlList?)
+- add option to change connection mode (done 50%)
 - fix missing decimals when loading state files
-- code search
-- define new project name, should be a bit disconnected to libmapper (dmi...)
 - update expression field and other parameters once it loads a new state file
-- fix double connection in state file OK
-- Fix expanding tree elements when there's no device OK
-- update to wxpython3 OK (FIX annoying issue with lists)
+
+- FIX: gizmos tree list
 
 Recently DONE:
+
+- FIX: line appended in the full connections grid OK
+- define new project name, should be a bit disconnected to libmapper? (dmi...) = pyMapperGUI OK
+- fix double connection in state file OK
+- Fix expanding tree elements when there's no device OK
+- update to wxpython3 OK
+
+==============
 
 - add menu options for saving/loading state
 - add expression presets load/save

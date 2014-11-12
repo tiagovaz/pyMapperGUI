@@ -112,7 +112,6 @@ class MyTreeList(wx.Panel):
             # disable controls
             self.GetParent().GetParent().mode_choice.Disable()
             self.GetParent().GetParent().mute_tool.Disable()
-#            self.GetParent().GetParent().edit_tool.Disable()
             self.GetParent().GetParent().expression_input.Disable()
             self.GetParent().GetParent().expression_y.Disable()
             self.GetParent().GetParent().arrow_range.Disable()
@@ -138,7 +137,6 @@ class MyTreeList(wx.Panel):
             # enable controls
             self.GetParent().GetParent().mode_choice.Enable()
             self.GetParent().GetParent().mute_tool.Enable()
-#            self.GetParent().GetParent().edit_tool.Enable()
             if connection_data["mode"] == self.my_mapper.mo_expression:
                 self.GetParent().GetParent().expression_input.Enable()
                 self.GetParent().GetParent().expression_y.Enable()
@@ -241,8 +239,6 @@ class MyTreeList(wx.Panel):
                     self.tree.SetItemText(s_output, str(o["min"]), 4)
                     self.tree.SetItemText(s_output, str(o["max"]), 5)
 
-
-
     def RefreshAll(self):
         # Add nodes (devices and their signals) to the trees
         # keep last devices list, compare with current and update if changed
@@ -257,21 +253,6 @@ class MyTreeList(wx.Panel):
             self.tree.Refresh()
             self.ExpandAll()
             self.devices_list = self.new_devices
-
-#        for d in self.devices_list:
-#            if d not in self.new_devices: # if a device disappeared
-#                self.tree.Delete(self.GetItemByLabel(d, self.root)) # delete it from the tree
-#        for d in self.new_devices:
-#            if d not in self.devices_list: # if a new device is found
-#                self.new_devices_list.append(d) # append to be added in the tree
-#        print "NEW DEVICES"
-#        print self.new_devices
-#        print "NEW DEVICES LIST"
-#        print self.new_devices_list
-#        print "OLD DEVICES LIST "
-#        print self.devices_list
-#
-        #self.devices_list = self.new_devices # update devices_list to reflect the current devices in the tree
 
     def OnExpand(self, event):
         self.ExpandAll()
