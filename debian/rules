@@ -1,0 +1,19 @@
+#!/usr/bin/make -f
+
+export PYTHONWARNINGS=d
+buildvers := $(shell pyversions -rv)
+
+%:
+	dh $@ --with python2
+
+override_dh_auto_build:
+	set -e; \
+		for i in $(buildvers); do \
+			python$$i setup.py build; \
+		done
+
+override_dh_auto_install:
+	set -e; \
+		for i in $(buildvers); do \
+			python$$i ./setup.py install --skip-build --root $(CURDIR)/debian/pymappergui --install-layout=deb; \
+		done
