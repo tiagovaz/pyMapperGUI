@@ -134,12 +134,12 @@ class MyFrame(wx.Frame):
         self.toolbar.AddSeparator()
         self.src_range_label = wx.StaticText(self.toolbar, -1, " Src. range: ")
         self.src_range_label.Disable()
-        self.src_range_min = FS.FloatSpin(self.toolbar, -1, increment=0.01, agwStyle=FS.FS_CENTRE, size=(100, 23))
+        self.src_range_min = FS.FloatSpin(self.toolbar, -1, increment=0.01, agwStyle=FS.FS_CENTRE, size=(100, 26))
         self.src_range_min.Disable()
         self.src_range_min.SetFormat("%f")
         self.src_range_min.SetDigits(2)
 
-        self.src_range_max = FS.FloatSpin(self.toolbar, -1, increment=0.01, agwStyle=FS.FS_CENTRE, size=(100, 23))
+        self.src_range_max = FS.FloatSpin(self.toolbar, -1, increment=0.01, agwStyle=FS.FS_CENTRE, size=(100, 26))
         self.src_range_max.Disable()
         self.src_range_max.SetFormat("%f")
         self.src_range_max.SetDigits(2)
@@ -154,12 +154,12 @@ class MyFrame(wx.Frame):
 
         self.dest_range_label = wx.StaticText(self.toolbar, -1, " Dest. range: ")
         self.dest_range_label.Disable()
-        self.dest_range_min = FS.FloatSpin(self.toolbar, -1, increment=0.01, agwStyle=FS.FS_CENTRE, size=(100, 23))
+        self.dest_range_min = FS.FloatSpin(self.toolbar, -1, increment=0.01, agwStyle=FS.FS_CENTRE, size=(100, 26))
         self.dest_range_min.Disable()
         self.dest_range_min.SetFormat("%f")
         self.dest_range_min.SetDigits(2)
 
-        self.dest_range_max = FS.FloatSpin(self.toolbar, -1, increment=0.01, agwStyle=FS.FS_CENTRE, size=(100, 23))
+        self.dest_range_max = FS.FloatSpin(self.toolbar, -1, increment=0.01, agwStyle=FS.FS_CENTRE, size=(100, 26))
         self.dest_range_max.Disable()
         self.dest_range_max.SetFormat("%f")
         self.dest_range_max.SetDigits(2)
@@ -226,8 +226,8 @@ class MyFrame(wx.Frame):
         self.SetMenuBar(menu_bar)
 
         ## source/destination search
-        self.sources_search = wx.SearchCtrl(self.main_panel, size=(240, -1), style=wx.TE_PROCESS_ENTER)
-        self.destinations_search = wx.SearchCtrl(self.main_panel, size=(240, -1), style=wx.TE_PROCESS_ENTER)
+        self.sources_search = wx.SearchCtrl(self.main_panel, size=(240, 26), style=wx.TE_PROCESS_ENTER)
+        self.destinations_search = wx.SearchCtrl(self.main_panel, size=(240, 26), style=wx.TE_PROCESS_ENTER)
 
         ## expand/collapse controls
         expand_icon = wx.Bitmap(icons_folder + 'expand.png')
