@@ -18,24 +18,25 @@ TODO:
 - set menubar values when loading a state file
 - add collapse all (added, but wx method doesn't work, needs debug)
 - create a logo and make an icon
-- make Debian package for pyMapperGUI
 - add class/methods documentation
 - add dialog to edit expression presets
 
 Next:
 ====
 
+- make Debian package for pyMapperGUI (50%)
 - add a sort of realtime visualization from input/output data (une line simple comme option dans une column, how to insert a line into ctrlList?)
 - add option to change connection mode (done 50%)
-- fix missing decimals when loading state files
 - update expression field and other parameters once it loads a new state file
 
 - FIX: gizmos tree list
+- FIX: wx3.0 window issues
 
 Recently DONE:
 ==============
 
-- devices search
+- fix missing decimals when loading state files
+- signal and devices search
 
 - FIX: line appended in the full connections grid OK
 - define new project name, should be a bit disconnected to libmapper? (dmi...) = pyMapperGUI OK
