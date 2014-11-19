@@ -21,9 +21,9 @@ TODO:
 - make Debian package for pyMapperGUI
 - add class/methods documentation
 - add dialog to edit expression presets
-- devices search
 
-- TODAY:
+Next:
+====
 
 - add a sort of realtime visualization from input/output data (une line simple comme option dans une column, how to insert a line into ctrlList?)
 - add option to change connection mode (done 50%)
@@ -33,15 +33,15 @@ TODO:
 - FIX: gizmos tree list
 
 Recently DONE:
+==============
+
+- devices search
 
 - FIX: line appended in the full connections grid OK
 - define new project name, should be a bit disconnected to libmapper? (dmi...) = pyMapperGUI OK
 - fix double connection in state file OK
 - Fix expanding tree elements when there's no device OK
 - update to wxpython3 OK
-
-==============
-
 - add menu options for saving/loading state
 - add expression presets load/save
 - update to new mapper API

@@ -367,6 +367,7 @@ class MyFrame(wx.Frame):
 
     def OnSetSourceMin(self, event):
         f = event.GetEventObject().GetValue()
+        print f
         self.my_mapper.Modify(self.sources_panel.GetSignalAddress(),
                               self.destinations_panel.GetSignalAddress(),
                               options={'src_min': f})
@@ -541,8 +542,7 @@ Suite 330, Boston, MA  02111-1307  USA"""
         self.my_mapper.setLink("/" + self.sources_panel.GetSignalAddress().split("/")[1],
                                "/" + self.destinations_panel.GetSignalAddress().split("/")[1], {})
         self.my_mapper.Connect(self.sources_panel.GetSignalAddress(),
-                               self.destinations_panel.GetSignalAddress(),
-                               options={})
+                               self.destinations_panel.GetSignalAddress()) 
         self.connections_panel.DrawConnectionsLines()
 
     def OnDisconnect(self, event):
