@@ -18,6 +18,7 @@ class MyFrame(wx.Frame):
     def __init__(self, parent, title):
         #wx.Frame.__init__(self, parent, -1, title=title, size=size)
         wx.Frame.__init__(self, parent, id=wx.ID_ANY, title=title, pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.DEFAULT_FRAME_STYLE)
+        self.SetMinSize((800, 600))
 
         # connections and expr preset files
         self.currentFile = None

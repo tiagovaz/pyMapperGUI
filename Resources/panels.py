@@ -61,12 +61,13 @@ class MyTreeList(wx.Panel):
                                            wx.TR_DEFAULT_STYLE
                                            | wx.TR_FULL_ROW_HIGHLIGHT
                                            | wx.TR_HAS_BUTTONS + wx.TR_HIDE_ROOT,
-                                           size=(530, 100))
+                                           size=(530, 400))
         self.tree.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OnActivate, self.tree)
         self.tree.Bind(wx.EVT_TREE_ITEM_EXPANDED, self.changed, self.tree)
         self.tree.Bind(wx.EVT_TREE_ITEM_COLLAPSED, self.changed, self.tree)
         self.tree.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnItemChanged, self.tree)
         self.Bind(wx.EVT_SIZE, self.OnSize)
+        self.tree.SetSize(self.GetSize())
 
         self.devices_list = []
 
@@ -105,8 +106,12 @@ class MyTreeList(wx.Panel):
         # show the connection expression and src/dest min/max in the toolbar
         src = self.GetParent().GetParent().sources_panel.GetSignalAddress()
         dest = self.GetParent().GetParent().destinations_panel.GetSignalAddress()
-        #FIXME: gizmos module seems to have a bug here
-        connection_data = self.my_mapper.getConnectionBySignalFullNames(src, dest)
+
+        if src == None and dest == None:
+            connection_data = None
+        else:
+            #FIXME: gizmos module seems to have a bug here
+            connection_data = self.my_mapper.getConnectionBySignalFullNames(src, dest)
 
         if connection_data is None:
             # disable controls
@@ -205,7 +210,6 @@ class MyTreeList(wx.Panel):
     def OnSize(self, event):
         self.tree.SetSize(self.GetSize())
 
-
     def AddTreeNodes(self, parentItem, items):
         for item in items:
             bg_color = 0
@@ -274,7 +278,12 @@ class MyTreeList(wx.Panel):
 
     def GetSignalAddress(self):
 #        print self.tree.GetItemText(self.tree.GetItemParent(self.tree.GetSelection())) + self.tree.GetItemText(self.tree.GetSelection())
-        return str(self.tree.GetItemText(self.tree.GetItemParent(self.tree.GetSelection())) + self.tree.GetItemText(self.tree.GetSelection()))
+        try:
+            ret = str(self.tree.GetItemText(self.tree.GetItemParent(self.tree.GetSelection())) + self.tree.GetItemText(self.tree.GetSelection()))
+        except:
+            ret = None
+
+        return ret
 
     def GetItemText(self, item):
         if item:
