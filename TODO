@@ -32,6 +32,7 @@ Next:
 Recently DONE:
 ==============
 
+- Try to connect only if both src and dest are selected.
 - auto draw, using callafter (1s)
 - Center main frame
 - FIX layout after resizing search input
