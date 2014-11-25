@@ -389,7 +389,6 @@ class MyFrame(wx.Frame):
 
     def OnSetSourceMin(self, event):
         f = event.GetEventObject().GetValue()
-        print f
         self.my_mapper.Modify(self.sources_panel.GetSignalAddress(),
                               self.destinations_panel.GetSignalAddress(),
                               options={'src_min': f})
@@ -467,7 +466,7 @@ Suite 330, Boston, MA  02111-1307  USA"""
         wx.CallAfter(self.destinations_panel.RefreshAll)
 #        wx.CallAfter(self.sources_panel.ExpandAll)
 #        wx.CallAfter(self.destinations_panel.ExpandAll)
-#        self.redraw()
+        self.redraw()
 
     # redraw the connections
     # try to call inside a Timer

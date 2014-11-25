@@ -34,7 +34,6 @@ class ConnectionsPanel(wx.Panel):
         gc = wx.GraphicsContext_Create(self.dc)
         self.dc.Clear()
         gc.SetPen(wx.Pen("blue", 1))
-        print conn_ids
         for conn in conn_ids:
             y1 = self.GetParent().GetParent().sources_panel.getItemPos(conn[0])
             y2 = self.GetParent().GetParent().destinations_panel.getItemPos(conn[1])
@@ -274,7 +273,6 @@ class MyTreeList(wx.Panel):
         return self.tree.GetSelection()
 
     def GetSignalAddress(self):
-#        print self.tree.GetItemText(self.tree.GetItemParent(self.tree.GetSelection())) + self.tree.GetItemText(self.tree.GetSelection())
         try:
             ret = str(self.tree.GetItemText(self.tree.GetItemParent(self.tree.GetSelection())) + self.tree.GetItemText(self.tree.GetSelection()))
         except:

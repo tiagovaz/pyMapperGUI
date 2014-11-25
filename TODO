@@ -29,11 +29,15 @@ Next:
 - add option to change connection mode (done 50%)
 - update expression field and other parameters once it loads a new state file
 
-- FIX: gizmos tree list
-- FIX: wx3.0 window issues
-
 Recently DONE:
 ==============
+
+- Center frame
+- FIX layout after resizing search input
+- FIX: gizmos tree list (segfault)
+- FIX: wx3.0 window issues
+
+------------
 
 - fix missing decimals when loading state files
 - signal and devices search
