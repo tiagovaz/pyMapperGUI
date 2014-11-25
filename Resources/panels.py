@@ -34,6 +34,7 @@ class ConnectionsPanel(wx.Panel):
         gc = wx.GraphicsContext_Create(self.dc)
         self.dc.Clear()
         gc.SetPen(wx.Pen("blue", 1))
+        print conn_ids
         for conn in conn_ids:
             y1 = self.GetParent().GetParent().sources_panel.getItemPos(conn[0])
             y2 = self.GetParent().GetParent().destinations_panel.getItemPos(conn[1])
@@ -46,7 +47,7 @@ class ConnectionsPanel(wx.Panel):
                 mu2 = (1-math.cos(mu*math.pi))/2
                 l.append([i, y1*(1-mu2)+y2*mu2])
             gc.DrawLines(l)
-        wx.CallAfter(self.Refresh)
+        #wx.CallAfter(self.Refresh)
 
 class MyTreeList(wx.Panel):
     def __init__(self, parent, id, which):
@@ -57,8 +58,7 @@ class MyTreeList(wx.Panel):
         self.which = which
 
         # Create the tree
-        self.tree = wx.gizmos.TreeListCtrl(self, style =
-                                           wx.TR_DEFAULT_STYLE
+        self.tree = wx.gizmos.TreeListCtrl(self, style = wx.TR_DEFAULT_STYLE
                                            | wx.TR_FULL_ROW_HIGHLIGHT
                                            | wx.TR_HAS_BUTTONS + wx.TR_HIDE_ROOT,
                                            size=(530, 400))
@@ -67,7 +67,7 @@ class MyTreeList(wx.Panel):
         self.tree.Bind(wx.EVT_TREE_ITEM_COLLAPSED, self.changed, self.tree)
         self.tree.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnItemChanged, self.tree)
         self.Bind(wx.EVT_SIZE, self.OnSize)
-        self.tree.SetSize(self.GetSize())
+#        self.tree.SetSize(self.GetSize())
 
         self.devices_list = []
 
@@ -184,10 +184,9 @@ class MyTreeList(wx.Panel):
 
     def getAllItems(self):
         pass
-#        print self.tree.GetItemText(self.root)
 
     def getItemPos(self, item):
-        while not self.tree.IsVisible(item): # cool!
+        while not self.tree.IsVisible(item):
             item = self.tree.GetItemParent(item)
         return self.tree.GetBoundingRect(item)
 
@@ -245,8 +244,6 @@ class MyTreeList(wx.Panel):
 
     def RefreshAll(self):
         # Add nodes (devices and their signals) to the trees
-        # keep last devices list, compare with current and update if changed
-        # same for removing item (DO NOT REBUILD ALL TREE)
         self.new_devices_list = []
         self.new_devices = self.my_mapper.getAllDevices()
         if self.new_devices != self.devices_list:

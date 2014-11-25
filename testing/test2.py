@@ -17,8 +17,8 @@ def freq_handler(sig, id, val, timetag):
         print sig, val
 
 def setup(d):
-    dev_input = dev.add_input( "/Q", 1, "i", None, 1, 500, lambda s, i, f, t: b.setQ(f) )
-    dev_input = dev.add_input( "/pitch", 1, "i", None, 20, 15000, freq_handler )
+    dev_input = dev.add_input( "/Q", 1, "f", None, 1, 5, lambda s, i, f, t: b.setQ(f) )
+    dev_input = dev.add_input( "/pitch", 1, "f", None, 20, 15000, freq_handler )
 
 dev = mapper.device("biquad")
 setup(dev)

@@ -15,10 +15,10 @@ from Resources.storage import *
 import os
 
 class MyFrame(wx.Frame):
-    def __init__(self, parent, title):
-        #wx.Frame.__init__(self, parent, -1, title=title, size=size)
-        wx.Frame.__init__(self, parent, id=wx.ID_ANY, title=title, pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.DEFAULT_FRAME_STYLE)
-        self.SetMinSize((800, 600))
+    def __init__(self, parent, title, size):
+        wx.Frame.__init__(self, parent, -1, title=title, size=size)
+        #wx.Frame.__init__(self, parent, id=wx.ID_ANY, title=title, pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.DEFAULT_FRAME_STYLE)
+        self.SetMinSize((1300, 600))
 
         # connections and expr preset files
         self.currentFile = None
@@ -229,6 +229,8 @@ class MyFrame(wx.Frame):
         ## source/destination search
         self.sources_search = wx.SearchCtrl(self.main_panel, size=(240, 26), style=wx.TE_PROCESS_ENTER)
         self.destinations_search = wx.SearchCtrl(self.main_panel, size=(240, 26), style=wx.TE_PROCESS_ENTER)
+        self.Bind(wx.EVT_TEXT, self.OnSourcesSearch, self.sources_search)
+        self.Bind(wx.EVT_TEXT, self.OnDestinationsSearch, self.destinations_search)
 
         ## expand/collapse controls
         expand_icon = wx.Bitmap(icons_folder + 'expand.png')
@@ -306,8 +308,8 @@ class MyFrame(wx.Frame):
         col2_box.Add(self.connections_panel, 1, wx.EXPAND)
         col3_box.Add(self.destinations_panel, 1, wx.EXPAND)
 
-        main_box.Fit(self)
-        main_box.SetSizeHints(self)
+#        main_box.Fit(self)
+#        main_box.SetSizeHints(self)
         self.main_panel.SetSizer(main_box)
 
         # mapper poll
@@ -316,6 +318,29 @@ class MyFrame(wx.Frame):
         self.timer.Start(milliseconds=1000, oneShot=False)
 
         self.Show()
+
+    def OnSourcesSearch(self, event):
+        text = event.GetString()
+        root = self.sources_panel.tree.GetRootItem()
+        item = self.sources_panel.GetItemByLabel(text, root)
+        self.sources_panel.tree.EnsureVisible(item)
+        try:
+            self.sources_panel.tree.SelectItem(item)
+        except:
+            pass #FIXME: do something
+
+    def OnDestinationsSearch(self, event):
+        text = event.GetString()
+        root = self.destinations_panel.tree.GetRootItem()
+        item = self.destinations_panel.GetItemByLabel(text, root)
+        self.destinations_panel.tree.EnsureVisible(item)
+        try:
+            self.destinations_panel.tree.SelectItem(item)
+        except:
+            pass #FIXME: do something
+
+
+
 
     def OnMute(self, event):
         if self.mute_tool.GetValue() is True:
@@ -584,9 +609,9 @@ class TestApp(wx.App, InspectionMixin):
         return 1
 
 
-app = TestApp(0)
-app.MainLoop()
-
-#app = wx.App(False)
-#frame = MyFrame(None, title="pymapper", size=(1400, 768))
+#app = TestApp(0)
 #app.MainLoop()
+
+app = wx.App(False)
+frame = MyFrame(None, title="pyMapperGUI", size=(1300, 600))
+app.MainLoop()
