@@ -107,7 +107,7 @@ class MyTreeList(wx.Panel):
         src = self.GetParent().GetParent().sources_panel.GetSignalAddress()
         dest = self.GetParent().GetParent().destinations_panel.GetSignalAddress()
 
-        if src == None and dest == None:
+        if src == None or dest == None:
             connection_data = None
         else:
             #FIXME: gizmos module seems to have a bug here
