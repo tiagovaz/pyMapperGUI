@@ -74,7 +74,7 @@ class MyMapper():
     def Modify(self, src, dest, options=None):
         self.mon.modify_connection(src, dest, options)
         self.mon.poll(5)
-#        print self.getConnections()
+        print self.getConnections()
 
     def getConnectionBySignalFullNames(self, src, dest):
         self.mon.poll(5)

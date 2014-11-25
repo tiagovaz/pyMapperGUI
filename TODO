@@ -16,7 +16,6 @@ TODO:
 - clean code at OnSetSourceMin and AddTreeNodes (avoid duplication)
 - refactore code for mapper instances, use only one monitor for everything
 - set menubar values when loading a state file
-- add collapse all (added, but wx method doesn't work, needs debug)
 - create a logo and make an icon
 - add class/methods documentation
 - add dialog to edit expression presets
@@ -24,7 +23,8 @@ TODO:
 Next:
 ====
 
-- FIX: first floatspin is reversed!
+- FIX collapse all (added, but wx method doesn't work, needs debug)
+- FIX first floatspin is reversed!
 - make Debian package for pyMapperGUI (50%)
 - add a sort of realtime visualization from input/output data (une line simple comme option dans une column, how to insert a line into ctrlList?)
 - add option to change connection mode (done 50%)
