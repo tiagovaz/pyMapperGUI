@@ -1,5 +1,3 @@
-#import wxversion
-#wxversion.select("2.8")
 import wx
 import netifaces
 from wx.lib.mixins.inspection import InspectionMixin
@@ -17,7 +15,6 @@ import os
 class MyFrame(wx.Frame):
     def __init__(self, parent, title, size):
         wx.Frame.__init__(self, parent, -1, title=title, size=size)
-        #wx.Frame.__init__(self, parent, id=wx.ID_ANY, title=title, pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.DEFAULT_FRAME_STYLE)
         self.SetMinSize((1300, 600))
 
         # connections and expr preset files
@@ -177,7 +174,6 @@ class MyFrame(wx.Frame):
 
         self.toolbar.AddControl(self.edit_tool)
 
-
         ## statusbar
         self.statusbar = self.CreateStatusBar()
 
@@ -227,8 +223,8 @@ class MyFrame(wx.Frame):
         self.SetMenuBar(menu_bar)
 
         ## source/destination search
-        self.sources_search = wx.SearchCtrl(self.main_panel, size=(240, 26), style=wx.TE_PROCESS_ENTER)
-        self.destinations_search = wx.SearchCtrl(self.main_panel, size=(240, 26), style=wx.TE_PROCESS_ENTER)
+        self.sources_search = wx.SearchCtrl(self.main_panel, size=(240, 21), style=wx.TE_PROCESS_ENTER)
+        self.destinations_search = wx.SearchCtrl(self.main_panel, size=(240, 21), style=wx.TE_PROCESS_ENTER)
         self.Bind(wx.EVT_TEXT, self.OnSourcesSearch, self.sources_search)
         self.Bind(wx.EVT_TEXT, self.OnDestinationsSearch, self.destinations_search)
 
@@ -317,6 +313,7 @@ class MyFrame(wx.Frame):
         self.Bind(wx.EVT_TIMER, self.OnTimer)
         self.timer.Start(milliseconds=1000, oneShot=False)
 
+        self.Centre()
         self.Show()
 
     def OnSourcesSearch(self, event):
@@ -567,7 +564,7 @@ Suite 330, Boston, MA  02111-1307  USA"""
         self.my_mapper.setLink("/" + self.sources_panel.GetSignalAddress().split("/")[1],
                                "/" + self.destinations_panel.GetSignalAddress().split("/")[1], {})
         self.my_mapper.Connect(self.sources_panel.GetSignalAddress(),
-                               self.destinations_panel.GetSignalAddress()) 
+                               self.destinations_panel.GetSignalAddress())
         self.connections_panel.DrawConnectionsLines()
 
     def OnDisconnect(self, event):
@@ -607,7 +604,6 @@ class TestApp(wx.App, InspectionMixin):
         self.SetTopWindow(mainFrame)
         mainFrame.Show()
         return 1
-
 
 #app = TestApp(0)
 #app.MainLoop()
