@@ -198,12 +198,16 @@ class MyTreeList(wx.Panel):
 
     def NewConnection(self):
         # set link and connection with libmapper
-        conns = self.my_mapper.getConnectionBySignalFullNames(self.GetParent().GetParent().sources_panel.GetSignalAddress(), self.GetParent().GetParent().destinations_panel.GetSignalAddress())
-        if conns is None:
-            self.my_mapper.setLink("/"+self.GetParent().GetParent().sources_panel.GetSignalAddress().split("/")[1], "/"+self.GetParent().GetParent().destinations_panel.GetSignalAddress().split("/")[1], {})
-            self.my_mapper.Connect(self.GetParent().GetParent().sources_panel.GetSignalAddress(), self.GetParent().GetParent().destinations_panel.GetSignalAddress(), options={})
-        else:
-            self.my_mapper.Disconnect(self.GetParent().GetParent().sources_panel.GetSignalAddress(), self.GetParent().GetParent().destinations_panel.GetSignalAddress())
+        source_sig = self.GetParent().GetParent().sources_panel.GetSignalAddress()
+        dest_sig = self.GetParent().GetParent().destinations_panel.GetSignalAddress()
+
+        if source_sig != None and dest_sig != None:
+            conns = self.my_mapper.getConnectionBySignalFullNames(source_sig, dest_sig)
+            if conns is None:
+                self.my_mapper.setLink("/"+source_sig.split("/")[1], "/"+dest_sig.split("/")[1], {})
+                self.my_mapper.Connect(source_sig, dest_sig, options={})
+            else:
+                self.my_mapper.Disconnect(source_sig, dest_sig)
 
     def OnSize(self, event):
         self.tree.SetSize(self.GetSize())
