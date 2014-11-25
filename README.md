@@ -1,6 +1,6 @@
-pymapper
+pyMapperGUI
 ========
 
-Cross-platform gui for libmapper
+Cross-platform GUI for libmapper
 
-[![pymapper](http://acaia.ca/~tiago/images/pymapper.png "pymapper")](https://github.com/tiagovaz/pymapper)
+[![pymappergui](http://acaia.ca/~tiago/images/pymapper.png "pymappergui")](https://github.com/tiagovaz/pymappergui)
