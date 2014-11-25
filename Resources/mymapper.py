@@ -68,13 +68,13 @@ class MyMapper():
             if len(self.getOutputsFromDevice(d)) != 0: # if device contains at least one output
                 sources.append(d)
         in_out_devices = {'sources': sources, 'destinations': destinations}
-        print in_out_devices
+        #print in_out_devices
         return in_out_devices
 
     def Modify(self, src, dest, options=None):
         self.mon.modify_connection(src, dest, options)
         self.mon.poll(5)
-        print self.getConnections()
+#        print self.getConnections()
 
     def getConnectionBySignalFullNames(self, src, dest):
         self.mon.poll(5)

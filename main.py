@@ -389,6 +389,7 @@ class MyFrame(wx.Frame):
 
     def OnSetSourceMin(self, event):
         f = event.GetEventObject().GetValue()
+        print f
         self.my_mapper.Modify(self.sources_panel.GetSignalAddress(),
                               self.destinations_panel.GetSignalAddress(),
                               options={'src_min': f})
