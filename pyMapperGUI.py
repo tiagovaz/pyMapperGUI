@@ -32,6 +32,8 @@ from pymappergui.panels import *
 from pymappergui.dialogs import *
 from pymappergui.storage import *
 import os
+from distutils.sysconfig import get_python_lib
+
 
 class MyFrame(wx.Frame):
     def __init__(self, parent, title, size):
@@ -79,7 +81,11 @@ class MyFrame(wx.Frame):
         conn_label.SetForegroundColour("grey")
 
         ## toolbar
-        icons_folder = "images/"
+        installed_icons_folder = get_python_lib() + "/pymappergui/images/"
+        if os.path.exists(installed_icons_folder):
+            icons_folder = installed_icons_folder
+        else:
+            icons_folder = "pymappergui/images/"
 
         self.toolbar = self.CreateToolBar(wx.TB_FLAT)
         self.toolbar.SetToolBitmapSize((22, 22))  # sets icon size
