@@ -12,7 +12,7 @@ setup(  name = "pyMapperGUI",
         license = "GPLv3",
         packages = ['pymappergui'],
         scripts = ['pyMapperGUI.py'],
-        #package_data={
-        #       'pymappgergui': ['PyMapperGUI.ico', 'PyMapperGUI_splash.png'],
-        #  }
+        package_data={
+               '': ['icons'],
+          }
     )

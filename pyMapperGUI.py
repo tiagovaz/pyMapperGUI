@@ -79,7 +79,7 @@ class MyFrame(wx.Frame):
         conn_label.SetForegroundColour("grey")
 
         ## toolbar
-        icons_folder = "icons/"
+        icons_folder = "images/"
 
         self.toolbar = self.CreateToolBar(wx.TB_FLAT)
         self.toolbar.SetToolBitmapSize((22, 22))  # sets icon size
