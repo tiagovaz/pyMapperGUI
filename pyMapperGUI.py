@@ -1,15 +1,36 @@
+#! /usr/bin/env python
+# encoding: utf-8
+"""
+Copyright 2014 Tiago Bortoletto Vaz
+
+This file is part of pyMapperGUI.
+
+pyMapperGUI is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+pyMapperGUI is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with pyMapperGUI. If not, see <http://www.gnu.org/licenses/>.
+"""
+
 import wx
 import netifaces
 from wx.lib.mixins.inspection import InspectionMixin
-from Resources.mymapper import MyMapper
+from pymappergui.mymapper import MyMapper
 # float spin for setting min/max values:
 try:
     from agw import floatspin as FS
 except ImportError:  # if it's not there locally, try the wxPython lib.
     import wx.lib.agw.floatspin as FS
-from Resources.panels import *
-from Resources.dialogs import *
-from Resources.storage import *
+from pymappergui.panels import *
+from pymappergui.dialogs import *
+from pymappergui.storage import *
 import os
 
 class MyFrame(wx.Frame):
@@ -304,9 +325,7 @@ class MyFrame(wx.Frame):
         col2_box.Add(self.connections_panel, 1, wx.EXPAND)
         col3_box.Add(self.destinations_panel, 1, wx.EXPAND)
 
-#        main_box.Fit(self)
-#        main_box.SetSizeHints(self)
-        self.main_panel.SetSizer(main_box)
+        self.main_panel.SetSizerAndFit(main_box)
 
         # mapper poll
         self.timer = wx.Timer(self)
@@ -396,6 +415,7 @@ class MyFrame(wx.Frame):
 
     def OnSetSourceMax(self, event):
         f = event.GetEventObject().GetValue()
+        print f
         self.my_mapper.Modify(self.sources_panel.GetSignalAddress(),
                               self.destinations_panel.GetSignalAddress(),
                               options={'src_max': f})

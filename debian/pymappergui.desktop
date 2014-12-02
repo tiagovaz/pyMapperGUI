@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=pyMapperGUI
+GenericName=Graphical User Interface for libmapper
+Comment=Graphical User Interface for libmapper
+Icon=/usr/share/pixmaps/pymappergui.png
+Type=Application
+Categories=AudioVideo;Audio;
+Exec=pymappergui
+Terminal=false
