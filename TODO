@@ -9,7 +9,6 @@ TODO:
 - add pure OSC support
 - build on Mac
 - build on Win
-- auto-refresh should list new found devices (hard)
 - network interface selection (coded, but doesn't seem to work, needs debug)
 - add mute icon
 - set increment offset automatically based on current min/max values
@@ -22,6 +21,7 @@ TODO:
 Next:
 ====
 
+- Select connection line (see cecilia example)
 - FIX collapse all (added, but wx method doesn't work, needs debug)
 - FIX first floatspin is reversed!
 - add a sort of realtime visualization from input/output data (une line simple comme option dans une column, how to insert a line into ctrlList?)
@@ -38,6 +38,7 @@ Recently DONE:
 
 -----------
 
+- auto-refresh should list new found devices
 - Try to connect only if both src and dest are selected.
 - auto draw, using callafter (1s)
 - Center main frame
