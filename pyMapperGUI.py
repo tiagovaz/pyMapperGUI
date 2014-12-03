@@ -459,7 +459,7 @@ Suite 330, Boston, MA  02111-1307  USA"""
 
    #     info.SetIcon(wx.Icon('pymapper.png', wx.BITMAP_TYPE_PNG))
         info.SetName('PyMapperGUI')
-        info.SetVersion('1.0beta1')
+        info.SetVersion('0.1')
         info.SetDescription(description)
         info.SetCopyright('(C) 2014 Tiago Bortoletto Vaz <tiago@debian.org>')
         info.SetWebSite('https://github.com/tiagovaz/pymapper')
